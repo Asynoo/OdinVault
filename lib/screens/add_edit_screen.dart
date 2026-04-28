@@ -5,6 +5,7 @@ import '../models/password_entry.dart';
 import '../services/auth_service.dart';
 import '../services/database_service.dart';
 import '../services/encryption_service.dart';
+import '../widgets/password_field.dart';
 
 class AddEditScreen extends StatefulWidget {
   final PasswordEntry? entry;
@@ -21,7 +22,6 @@ class _AddEditScreenState extends State<AddEditScreen> {
   late final TextEditingController _passwordCtrl;
   late final TextEditingController _urlCtrl;
   late final TextEditingController _notesCtrl;
-  bool _obscure = true;
   bool _loading = false;
 
   bool get _isEdit => widget.entry != null;
@@ -45,12 +45,8 @@ class _AddEditScreenState extends State<AddEditScreen> {
     const chars =
         'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#\$%^&*';
     final rng = Random.secure();
-    final password =
+    _passwordCtrl.text =
         List.generate(20, (_) => chars[rng.nextInt(chars.length)]).join();
-    setState(() {
-      _passwordCtrl.text = password;
-      _obscure = false;
-    });
   }
 
   Future<void> _save() async {
@@ -61,28 +57,28 @@ class _AddEditScreenState extends State<AddEditScreen> {
     setState(() => _loading = true);
     final encrypted = EncryptionService.encrypt(_passwordCtrl.text, key);
     final now = DateTime.now();
+    final url = _urlCtrl.text.trim();
+    final notes = _notesCtrl.text.trim();
 
     if (_isEdit) {
-      final updated = widget.entry!.copyWith(
+      await DatabaseService.updatePassword(widget.entry!.copyWith(
         title: _titleCtrl.text.trim(),
         username: _usernameCtrl.text.trim(),
         encryptedPassword: encrypted,
-        url: _urlCtrl.text.trim().isEmpty ? null : _urlCtrl.text.trim(),
-        notes: _notesCtrl.text.trim().isEmpty ? null : _notesCtrl.text.trim(),
+        url: url.isEmpty ? null : url,
+        notes: notes.isEmpty ? null : notes,
         updatedAt: now,
-      );
-      await DatabaseService.updatePassword(updated);
+      ));
     } else {
-      final entry = PasswordEntry(
+      await DatabaseService.insertPassword(PasswordEntry(
         title: _titleCtrl.text.trim(),
         username: _usernameCtrl.text.trim(),
         encryptedPassword: encrypted,
-        url: _urlCtrl.text.trim().isEmpty ? null : _urlCtrl.text.trim(),
-        notes: _notesCtrl.text.trim().isEmpty ? null : _notesCtrl.text.trim(),
+        url: url.isEmpty ? null : url,
+        notes: notes.isEmpty ? null : notes,
         createdAt: now,
         updatedAt: now,
-      );
-      await DatabaseService.insertPassword(entry);
+      ));
     }
 
     if (!mounted) return;
@@ -144,32 +140,16 @@ class _AddEditScreenState extends State<AddEditScreen> {
                     (v == null || v.trim().isEmpty) ? l.usernameRequired : null,
               ),
               const SizedBox(height: 16),
-              TextFormField(
+              PasswordField(
                 controller: _passwordCtrl,
-                obscureText: _obscure,
-                decoration: InputDecoration(
-                  labelText: l.passwordField,
-                  prefixIcon: const Icon(Icons.lock_outline),
-                  border: const OutlineInputBorder(),
-                  suffixIcon: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      IconButton(
-                        icon: Icon(
-                            _obscure ? Icons.visibility_off : Icons.visibility),
-                        onPressed: () => setState(() => _obscure = !_obscure),
-                        tooltip: l.toggleVisibility,
-                      ),
-                      IconButton(
-                        icon: const Icon(Icons.auto_fix_high),
-                        onPressed: _generatePassword,
-                        tooltip: l.generatePassword,
-                      ),
-                    ],
-                  ),
-                ),
+                labelText: l.passwordField,
                 validator: (v) =>
                     (v == null || v.isEmpty) ? l.passwordRequired : null,
+                extraSuffixAction: IconButton(
+                  icon: const Icon(Icons.auto_fix_high),
+                  onPressed: _generatePassword,
+                  tooltip: l.generatePassword,
+                ),
               ),
               const SizedBox(height: 16),
               TextFormField(

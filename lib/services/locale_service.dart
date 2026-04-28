@@ -1,10 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'storage.dart';
 
 class LocaleService {
-  static const _storage = FlutterSecureStorage(
-    aOptions: AndroidOptions(encryptedSharedPreferences: true),
-  );
   static const _key = 'locale';
 
   static const supported = [
@@ -22,7 +19,7 @@ class LocaleService {
   static final notifier = ValueNotifier<Locale>(const Locale('en'));
 
   static Future<void> load() async {
-    final code = await _storage.read(key: _key);
+    final code = await secureStorage.read(key: _key);
     if (code != null && supported.any((l) => l.languageCode == code)) {
       notifier.value = Locale(code);
     }
@@ -30,6 +27,6 @@ class LocaleService {
 
   static Future<void> setLocale(Locale locale) async {
     notifier.value = locale;
-    await _storage.write(key: _key, value: locale.languageCode);
+    await secureStorage.write(key: _key, value: locale.languageCode);
   }
 }

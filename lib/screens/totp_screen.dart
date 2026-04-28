@@ -6,16 +6,18 @@ import '../services/auth_service.dart';
 import '../services/database_service.dart';
 import '../services/encryption_service.dart';
 import '../services/totp_service.dart';
+import '../widgets/confirm_dialog.dart';
+import '../widgets/empty_state.dart';
 import '../widgets/totp_card.dart';
 
 class TotpScreen extends StatefulWidget {
   const TotpScreen({super.key});
 
   @override
-  State<TotpScreen> createState() => _TotpScreenState();
+  TotpScreenState createState() => TotpScreenState();
 }
 
-class _TotpScreenState extends State<TotpScreen> {
+class TotpScreenState extends State<TotpScreen> {
   List<TotpEntry> _entries = [];
   Timer? _timer;
   int _secondsLeft = 30;
@@ -37,6 +39,8 @@ class _TotpScreenState extends State<TotpScreen> {
     });
   }
 
+  void refresh() => _loadEntries();
+
   void _startTimer() {
     _secondsLeft = TotpService.secondsRemaining();
     _timer = Timer.periodic(const Duration(seconds: 1), (_) {
@@ -44,32 +48,16 @@ class _TotpScreenState extends State<TotpScreen> {
     });
   }
 
-  String _decryptSecret(String encrypted) {
-    final key = AuthService.sessionKey;
-    if (key == null) return '';
-    return EncryptionService.decrypt(encrypted, key);
-  }
-
   Future<void> _deleteEntry(TotpEntry entry) async {
     final l = AppLocalizations.of(context)!;
-    final confirm = await showDialog<bool>(
-      context: context,
-      builder: (ctx) => AlertDialog(
-        title: Text(l.removeTwoFaTitle),
-        content: Text(l.removeTwoFaContent(entry.name)),
-        actions: [
-          TextButton(
-              onPressed: () => Navigator.pop(ctx, false),
-              child: Text(l.cancel)),
-          FilledButton(
-            onPressed: () => Navigator.pop(ctx, true),
-            style: FilledButton.styleFrom(backgroundColor: Colors.red),
-            child: Text(l.remove),
-          ),
-        ],
-      ),
+    final confirmed = await showConfirmDialog(
+      context,
+      title: l.removeTwoFaTitle,
+      content: l.removeTwoFaContent(entry.name),
+      confirmLabel: l.remove,
+      cancelLabel: l.cancel,
     );
-    if (confirm == true) {
+    if (confirmed) {
       await DatabaseService.deleteTotp(entry.id!);
       _loadEntries();
     }
@@ -87,23 +75,7 @@ class _TotpScreenState extends State<TotpScreen> {
     if (_loading) return const Center(child: CircularProgressIndicator());
 
     if (_entries.isEmpty) {
-      return Center(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Icon(Icons.security,
-                size: 64,
-                color: Theme.of(context).colorScheme.onSurface.withAlpha(61)),
-            const SizedBox(height: 16),
-            Text(
-              l.noTotpEntries,
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                  color: Theme.of(context).colorScheme.onSurfaceVariant),
-            ),
-          ],
-        ),
-      );
+      return EmptyState(icon: Icons.security, message: l.noTotpEntries);
     }
 
     return Column(
@@ -123,7 +95,9 @@ class _TotpScreenState extends State<TotpScreen> {
                 width: 120,
                 child: LinearProgressIndicator(
                   value: _secondsLeft / 30,
-                  color: _secondsLeft <= 5 ? Colors.red : const Color(0xFF5C6BC0),
+                  color: _secondsLeft <= 5
+                      ? Colors.red
+                      : const Color(0xFF5C6BC0),
                   backgroundColor:
                       Theme.of(context).colorScheme.onSurface.withAlpha(30),
                   minHeight: 6,
@@ -139,7 +113,7 @@ class _TotpScreenState extends State<TotpScreen> {
             itemCount: _entries.length,
             itemBuilder: (_, i) {
               final entry = _entries[i];
-              final secret = _decryptSecret(entry.encryptedSecret);
+              final secret = AuthService.decrypt(entry.encryptedSecret);
               return TotpCard(
                 entry: entry,
                 secret: secret,
@@ -155,7 +129,8 @@ class _TotpScreenState extends State<TotpScreen> {
 }
 
 class TotpFab extends StatefulWidget {
-  const TotpFab({super.key});
+  final VoidCallback? onAdded;
+  const TotpFab({super.key, this.onAdded});
 
   @override
   State<TotpFab> createState() => _TotpFabState();
@@ -181,9 +156,7 @@ class _TotpFabState extends State<TotpFab> {
     );
     await DatabaseService.insertTotp(entry);
 
-    if (!mounted) return;
-    final state = context.findAncestorStateOfType<_TotpScreenState>();
-    state?._loadEntries();
+    widget.onAdded?.call();
   }
 
   @override

@@ -4,6 +4,8 @@ import '../services/auth_service.dart';
 import '../services/database_service.dart';
 import '../services/locale_service.dart';
 import '../services/theme_service.dart';
+import '../widgets/confirm_dialog.dart';
+import '../widgets/password_field.dart';
 
 class SettingsScreen extends StatefulWidget {
   final VoidCallback onLogout;
@@ -60,29 +62,19 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
   Future<void> _resetVault() async {
     final l = AppLocalizations.of(context)!;
-    final confirmed = await showDialog<bool>(
-      context: context,
-      builder: (ctx) => AlertDialog(
-        title: Text(l.resetVault),
-        content: Text(l.resetVaultContent),
-        actions: [
-          TextButton(
-              onPressed: () => Navigator.pop(ctx, false),
-              child: Text(l.cancel)),
-          FilledButton(
-            onPressed: () => Navigator.pop(ctx, true),
-            style: FilledButton.styleFrom(backgroundColor: Colors.red),
-            child: Text(l.resetEverything),
-          ),
-        ],
-      ),
+    final confirmed = await showConfirmDialog(
+      context,
+      title: l.resetVault,
+      content: l.resetVaultContent,
+      confirmLabel: l.resetEverything,
+      cancelLabel: l.cancel,
     );
 
-    if (confirmed != true) return;
+    if (!confirmed) return;
 
-    final db = await DatabaseService.db;
-    await db.delete('passwords');
-    await db.delete('totp_entries');
+    final database = await DatabaseService.db;
+    await database.delete(DatabaseService.tablePasswords);
+    await database.delete(DatabaseService.tableTotp);
     await AuthService.deleteAll();
 
     if (!mounted) return;
@@ -277,26 +269,22 @@ class _ChangePasswordDialogState extends State<_ChangePasswordDialog> {
                 child: Text(_error!,
                     style: const TextStyle(color: Colors.red, fontSize: 13)),
               ),
-            TextFormField(
+            PasswordField(
               controller: _currentCtrl,
-              obscureText: true,
-              decoration: InputDecoration(labelText: l.currentPasswordField),
+              labelText: l.currentPasswordField,
               validator: (v) => (v == null || v.isEmpty) ? l.required : null,
             ),
             const SizedBox(height: 12),
-            TextFormField(
+            PasswordField(
               controller: _newCtrl,
-              obscureText: true,
-              decoration: InputDecoration(labelText: l.newPasswordField),
+              labelText: l.newPasswordField,
               validator: (v) =>
                   (v == null || v.length < 8) ? l.minimumCharacters : null,
             ),
             const SizedBox(height: 12),
-            TextFormField(
+            PasswordField(
               controller: _confirmCtrl,
-              obscureText: true,
-              decoration:
-                  InputDecoration(labelText: l.confirmNewPasswordField),
+              labelText: l.confirmNewPasswordField,
               validator: (v) =>
                   v != _newCtrl.text ? l.passwordsDoNotMatch : null,
             ),

@@ -3,7 +3,8 @@ import '../l10n/app_localizations.dart';
 import '../models/password_entry.dart';
 import '../services/auth_service.dart';
 import '../services/database_service.dart';
-import '../services/encryption_service.dart';
+import '../widgets/confirm_dialog.dart';
+import '../widgets/empty_state.dart';
 import '../widgets/password_card.dart';
 import 'add_edit_screen.dart';
 import 'totp_screen.dart';
@@ -18,6 +19,7 @@ class VaultScreen extends StatefulWidget {
 }
 
 class _VaultScreenState extends State<VaultScreen> {
+  final _totpKey = GlobalKey<TotpScreenState>();
   int _navIndex = 0;
   List<PasswordEntry> _entries = [];
   String _search = '';
@@ -71,33 +73,17 @@ class _VaultScreenState extends State<VaultScreen> {
 
   Future<void> _deleteEntry(PasswordEntry entry) async {
     final l = AppLocalizations.of(context)!;
-    final confirm = await showDialog<bool>(
-      context: context,
-      builder: (ctx) => AlertDialog(
-        title: Text(l.deleteEntryTitle),
-        content: Text(l.deleteEntryContent(entry.title)),
-        actions: [
-          TextButton(
-              onPressed: () => Navigator.pop(ctx, false),
-              child: Text(l.cancel)),
-          FilledButton(
-            onPressed: () => Navigator.pop(ctx, true),
-            style: FilledButton.styleFrom(backgroundColor: Colors.red),
-            child: Text(l.delete),
-          ),
-        ],
-      ),
+    final confirmed = await showConfirmDialog(
+      context,
+      title: l.deleteEntryTitle,
+      content: l.deleteEntryContent(entry.title),
+      confirmLabel: l.delete,
+      cancelLabel: l.cancel,
     );
-    if (confirm == true) {
+    if (confirmed) {
       await DatabaseService.deletePassword(entry.id!);
       _loadEntries();
     }
-  }
-
-  String _decryptPassword(String encrypted) {
-    final key = AuthService.sessionKey;
-    if (key == null) return '';
-    return EncryptionService.decrypt(encrypted, key);
   }
 
   Widget _buildVaultTab(AppLocalizations l) {
@@ -118,31 +104,17 @@ class _VaultScreenState extends State<VaultScreen> {
           child: _loading
               ? const Center(child: CircularProgressIndicator())
               : _filtered.isEmpty
-                  ? Center(
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Icon(Icons.lock_open,
-                              size: 64,
-                              color: Theme.of(context).colorScheme.onSurface.withAlpha(61)),
-                          const SizedBox(height: 16),
-                          Text(
-                            _search.isEmpty
-                                ? l.noPasswordsYet
-                                : l.noSearchResults(_search),
-                            textAlign: TextAlign.center,
-                            style: TextStyle(
-                                color: Theme.of(context).colorScheme.onSurfaceVariant),
-                          ),
-                        ],
-                      ),
+                  ? EmptyState(
+                      icon: Icons.lock_open,
+                      message: _search.isEmpty
+                          ? l.noPasswordsYet
+                          : l.noSearchResults(_search),
                     )
                   : ListView.builder(
                       padding: const EdgeInsets.symmetric(horizontal: 16),
                       itemCount: _filtered.length,
                       itemBuilder: (_, i) => PasswordCard(
                         entry: _filtered[i],
-                        getDecryptedPassword: _decryptPassword,
                         onEdit: () => _editEntry(_filtered[i]),
                         onDelete: () => _deleteEntry(_filtered[i]),
                       ),
@@ -157,7 +129,7 @@ class _VaultScreenState extends State<VaultScreen> {
     final l = AppLocalizations.of(context)!;
     final tabs = [
       _buildVaultTab(l),
-      const TotpScreen(),
+      TotpScreen(key: _totpKey),
       SettingsScreen(onLogout: _logout),
     ];
 
@@ -180,7 +152,7 @@ class _VaultScreenState extends State<VaultScreen> {
               child: const Icon(Icons.add),
             )
           : _navIndex == 1
-              ? const TotpFab()
+              ? TotpFab(onAdded: () => _totpKey.currentState?.refresh())
               : null,
       bottomNavigationBar: NavigationBar(
         selectedIndex: _navIndex,

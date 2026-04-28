@@ -4,6 +4,9 @@ import '../models/password_entry.dart';
 import '../models/totp_entry.dart';
 
 class DatabaseService {
+  static const tablePasswords = 'passwords';
+  static const tableTotp = 'totp_entries';
+
   static Database? _db;
 
   static Future<Database> get db async {
@@ -18,7 +21,7 @@ class DatabaseService {
       version: 1,
       onCreate: (db, _) async {
         await db.execute('''
-          CREATE TABLE passwords (
+          CREATE TABLE $tablePasswords (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             title TEXT NOT NULL,
             username TEXT NOT NULL,
@@ -30,7 +33,7 @@ class DatabaseService {
           )
         ''');
         await db.execute('''
-          CREATE TABLE totp_entries (
+          CREATE TABLE $tableTotp (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             name TEXT NOT NULL,
             issuer TEXT NOT NULL,
@@ -46,19 +49,19 @@ class DatabaseService {
 
   static Future<List<PasswordEntry>> getPasswords() async {
     final database = await db;
-    final maps = await database.query('passwords', orderBy: 'title ASC');
+    final maps = await database.query(tablePasswords, orderBy: 'title ASC');
     return maps.map(PasswordEntry.fromMap).toList();
   }
 
   static Future<int> insertPassword(PasswordEntry entry) async {
     final database = await db;
-    return database.insert('passwords', entry.toMap()..remove('id'));
+    return database.insert(tablePasswords, entry.toMap()..remove('id'));
   }
 
   static Future<void> updatePassword(PasswordEntry entry) async {
     final database = await db;
     await database.update(
-      'passwords',
+      tablePasswords,
       entry.toMap()..remove('id'),
       where: 'id = ?',
       whereArgs: [entry.id],
@@ -67,22 +70,22 @@ class DatabaseService {
 
   static Future<void> deletePassword(int id) async {
     final database = await db;
-    await database.delete('passwords', where: 'id = ?', whereArgs: [id]);
+    await database.delete(tablePasswords, where: 'id = ?', whereArgs: [id]);
   }
 
   static Future<List<TotpEntry>> getTotpEntries() async {
     final database = await db;
-    final maps = await database.query('totp_entries', orderBy: 'name ASC');
+    final maps = await database.query(tableTotp, orderBy: 'name ASC');
     return maps.map(TotpEntry.fromMap).toList();
   }
 
   static Future<int> insertTotp(TotpEntry entry) async {
     final database = await db;
-    return database.insert('totp_entries', entry.toMap()..remove('id'));
+    return database.insert(tableTotp, entry.toMap()..remove('id'));
   }
 
   static Future<void> deleteTotp(int id) async {
     final database = await db;
-    await database.delete('totp_entries', where: 'id = ?', whereArgs: [id]);
+    await database.delete(tableTotp, where: 'id = ?', whereArgs: [id]);
   }
 }

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import '../l10n/app_localizations.dart';
 import '../models/totp_entry.dart';
 import '../services/totp_service.dart';
+import '../utils/clipboard_utils.dart';
 
 class TotpCard extends StatelessWidget {
   final TotpEntry entry;
@@ -17,15 +17,6 @@ class TotpCard extends StatelessWidget {
     required this.secondsLeft,
     required this.onDelete,
   });
-
-  Future<void> _copyCode(BuildContext context, String code) async {
-    final l = AppLocalizations.of(context)!;
-    await Clipboard.setData(ClipboardData(text: code));
-    if (!context.mounted) return;
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text(l.codeCopied), duration: const Duration(seconds: 2)),
-    );
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -98,7 +89,7 @@ class TotpCard extends StatelessWidget {
                 IconButton(
                   icon: const Icon(Icons.copy, size: 20),
                   tooltip: l.copyCodeTooltip,
-                  onPressed: () => _copyCode(context, code),
+                  onPressed: () => copyWithFeedback(context, code, l.codeCopied),
                 ),
                 IconButton(
                   icon: const Icon(Icons.delete_outline,

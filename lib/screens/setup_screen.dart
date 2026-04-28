@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../l10n/app_localizations.dart';
 import '../services/auth_service.dart';
+import '../widgets/password_field.dart';
 import 'vault_screen.dart';
 
 class SetupScreen extends StatefulWidget {
@@ -14,8 +15,6 @@ class _SetupScreenState extends State<SetupScreen> {
   final _formKey = GlobalKey<FormState>();
   final _passwordCtrl = TextEditingController();
   final _confirmCtrl = TextEditingController();
-  bool _obscurePassword = true;
-  bool _obscureConfirm = true;
   bool _loading = false;
 
   double _passwordStrength(String password) {
@@ -73,7 +72,8 @@ class _SetupScreenState extends State<SetupScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  const Icon(Icons.lock_outline, size: 72, color: Color(0xFF5C6BC0)),
+                  const Icon(Icons.lock_outline,
+                      size: 72, color: Color(0xFF5C6BC0)),
                   const SizedBox(height: 16),
                   Text(
                     l.appTitle,
@@ -92,33 +92,20 @@ class _SetupScreenState extends State<SetupScreen> {
                         ),
                   ),
                   const SizedBox(height: 40),
-                  TextFormField(
+                  PasswordField(
                     controller: _passwordCtrl,
-                    obscureText: _obscurePassword,
+                    labelText: l.masterPasswordLabel,
                     onChanged: (_) => setState(() {}),
-                    decoration: InputDecoration(
-                      labelText: l.masterPasswordLabel,
-                      prefixIcon: const Icon(Icons.lock),
-                      suffixIcon: IconButton(
-                        icon: Icon(_obscurePassword
-                            ? Icons.visibility_off
-                            : Icons.visibility),
-                        onPressed: () =>
-                            setState(() => _obscurePassword = !_obscurePassword),
-                      ),
-                      border: const OutlineInputBorder(),
-                    ),
-                    validator: (v) {
-                      if (v == null || v.length < 8) return l.passwordTooShort;
-                      return null;
-                    },
+                    validator: (v) =>
+                        (v == null || v.length < 8) ? l.passwordTooShort : null,
                   ),
                   const SizedBox(height: 8),
                   if (_passwordCtrl.text.isNotEmpty) ...[
                     LinearProgressIndicator(
                       value: strength,
                       color: _strengthColor(strength),
-                      backgroundColor: Theme.of(context).colorScheme.onSurface.withAlpha(30),
+                      backgroundColor:
+                          Theme.of(context).colorScheme.onSurface.withAlpha(30),
                       minHeight: 6,
                       borderRadius: BorderRadius.circular(3),
                     ),
@@ -131,25 +118,12 @@ class _SetupScreenState extends State<SetupScreen> {
                     const SizedBox(height: 8),
                   ],
                   const SizedBox(height: 8),
-                  TextFormField(
+                  PasswordField(
                     controller: _confirmCtrl,
-                    obscureText: _obscureConfirm,
-                    decoration: InputDecoration(
-                      labelText: l.confirmPasswordLabel,
-                      prefixIcon: const Icon(Icons.lock_outline),
-                      suffixIcon: IconButton(
-                        icon: Icon(_obscureConfirm
-                            ? Icons.visibility_off
-                            : Icons.visibility),
-                        onPressed: () =>
-                            setState(() => _obscureConfirm = !_obscureConfirm),
-                      ),
-                      border: const OutlineInputBorder(),
-                    ),
-                    validator: (v) {
-                      if (v != _passwordCtrl.text) return l.passwordsDoNotMatch;
-                      return null;
-                    },
+                    labelText: l.confirmPasswordLabel,
+                    prefixIcon: const Icon(Icons.lock_outline),
+                    validator: (v) =>
+                        v != _passwordCtrl.text ? l.passwordsDoNotMatch : null,
                   ),
                   const SizedBox(height: 32),
                   FilledButton(
@@ -163,7 +137,8 @@ class _SetupScreenState extends State<SetupScreen> {
                             width: 20,
                             child: CircularProgressIndicator(strokeWidth: 2),
                           )
-                        : Text(l.createVaultButton, style: const TextStyle(fontSize: 16)),
+                        : Text(l.createVaultButton,
+                            style: const TextStyle(fontSize: 16)),
                   ),
                 ],
               ),

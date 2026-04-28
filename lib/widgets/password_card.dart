@@ -1,18 +1,17 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import '../l10n/app_localizations.dart';
 import '../models/password_entry.dart';
+import '../services/auth_service.dart';
+import '../utils/clipboard_utils.dart';
 
 class PasswordCard extends StatefulWidget {
   final PasswordEntry entry;
-  final String Function(String) getDecryptedPassword;
   final VoidCallback onEdit;
   final VoidCallback onDelete;
 
   const PasswordCard({
     super.key,
     required this.entry,
-    required this.getDecryptedPassword,
     required this.onEdit,
     required this.onDelete,
   });
@@ -34,28 +33,19 @@ class _PasswordCardState extends State<PasswordCard> {
   }
 
   void _revealPassword() {
-    _decryptedPassword ??=
-        widget.getDecryptedPassword(widget.entry.encryptedPassword);
+    _decryptedPassword ??= AuthService.decrypt(widget.entry.encryptedPassword);
     setState(() => _showPassword = !_showPassword);
   }
 
   Future<void> _copyUsername() async {
     final l = AppLocalizations.of(context)!;
-    await Clipboard.setData(ClipboardData(text: widget.entry.username));
-    if (!mounted) return;
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text(l.usernameCopied), duration: const Duration(seconds: 2)),
-    );
+    await copyWithFeedback(context, widget.entry.username, l.usernameCopied);
   }
 
   Future<void> _copyPassword() async {
     final l = AppLocalizations.of(context)!;
-    final pwd = widget.getDecryptedPassword(widget.entry.encryptedPassword);
-    await Clipboard.setData(ClipboardData(text: pwd));
-    if (!mounted) return;
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text(l.passwordCopied), duration: const Duration(seconds: 2)),
-    );
+    final pwd = AuthService.decrypt(widget.entry.encryptedPassword);
+    await copyWithFeedback(context, pwd, l.passwordCopied);
   }
 
   @override

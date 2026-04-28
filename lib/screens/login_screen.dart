@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../l10n/app_localizations.dart';
 import '../services/auth_service.dart';
+import '../widgets/password_field.dart';
 import 'vault_screen.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -13,7 +14,6 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen> {
   final _formKey = GlobalKey<FormState>();
   final _passwordCtrl = TextEditingController();
-  bool _obscure = true;
   bool _loading = false;
   bool _bioAvailable = false;
   bool _bioEnabled = false;
@@ -26,13 +26,15 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   Future<void> _checkBiometric() async {
-    final available = await AuthService.isBiometricAvailable();
-    final enabled = await AuthService.isBiometricEnabled();
+    final results = await Future.wait([
+      AuthService.isBiometricAvailable(),
+      AuthService.isBiometricEnabled(),
+    ]);
     setState(() {
-      _bioAvailable = available;
-      _bioEnabled = enabled;
+      _bioAvailable = results[0];
+      _bioEnabled = results[1];
     });
-    if (enabled && available) _tryBiometric();
+    if (results[0] && results[1]) _tryBiometric();
   }
 
   Future<void> _tryBiometric() async {
@@ -111,25 +113,18 @@ class _LoginScreenState extends State<LoginScreen> {
                         ),
                   ),
                   const SizedBox(height: 40),
-                  TextFormField(
+                  PasswordField(
                     controller: _passwordCtrl,
-                    obscureText: _obscure,
-                    autofocus: true,
-                    decoration: InputDecoration(
-                      labelText: l.masterPasswordLabel,
-                      prefixIcon: const Icon(Icons.lock),
-                      suffixIcon: IconButton(
-                        icon: Icon(
-                            _obscure ? Icons.visibility_off : Icons.visibility),
-                        onPressed: () => setState(() => _obscure = !_obscure),
-                      ),
-                      border: const OutlineInputBorder(),
-                      errorText: _error,
-                    ),
+                    labelText: l.masterPasswordLabel,
                     onFieldSubmitted: (_) => _login(),
                     validator: (v) =>
                         (v == null || v.isEmpty) ? l.enterYourPassword : null,
                   ),
+                  if (_error != null) ...[
+                    const SizedBox(height: 8),
+                    Text(_error!,
+                        style: const TextStyle(color: Colors.red, fontSize: 13)),
+                  ],
                   const SizedBox(height: 24),
                   FilledButton(
                     onPressed: _loading ? null : _login,
@@ -142,7 +137,8 @@ class _LoginScreenState extends State<LoginScreen> {
                             width: 20,
                             child: CircularProgressIndicator(strokeWidth: 2),
                           )
-                        : Text(l.unlockButton, style: const TextStyle(fontSize: 16)),
+                        : Text(l.unlockButton,
+                            style: const TextStyle(fontSize: 16)),
                   ),
                   if (_bioAvailable && _bioEnabled) ...[
                     const SizedBox(height: 16),
