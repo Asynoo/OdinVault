@@ -7,8 +7,10 @@ A local-first password manager and TOTP authenticator built with Flutter. All da
 - **Password vault** - store, edit, and delete credentials (title, username, password, URL, notes)
 - **TOTP / 2FA** - add authenticator codes by secret key with live countdown
 - **Biometric unlock** - fingerprint / face authentication via the device's secure hardware
-- **Master password** - salted SHA-256 hash, never stored in plaintext
+- **Master password** - PBKDF2 (100,000 iterations, SHA-256 HMAC) with a random 32-byte salt; never stored in plaintext
 - **Encrypted storage** - vault entries encrypted with AES-256-CBC; the key is held in Android Keystore via `flutter_secure_storage`
+- **Light and dark mode** - toggle in Settings, preference persisted across sessions
+- **Localization** - English, Danish, and Japanese
 - **Fully offline** - SQLite database, no network permissions required
 
 ## Tech stack
@@ -21,13 +23,14 @@ A local-first password manager and TOTP authenticator built with Flutter. All da
 | Encryption | encrypt (AES-256-CBC) |
 | Biometrics | local_auth |
 | TOTP | otp |
-| Hashing | crypto (SHA-256) |
+| Key derivation | pointycastle (PBKDF2 / SHA-256 HMAC) |
+| Localization | flutter_localizations + intl |
 
 ## Getting started
 
 ### Prerequisites
 
-- Flutter SDK ≥ 3.11.5
+- Flutter SDK >= 3.11.5
 - Android SDK (for Android builds)
 
 ### Run
@@ -42,7 +45,8 @@ flutter run
 ## Security notes
 
 - Encryption keys are generated at runtime with a cryptographically secure RNG and stored in the Android Keystore.
-- The master password hash uses SHA-256 + a random 32-byte salt. A future improvement would be to replace this with a slow KDF (PBKDF2 / Argon2) for stronger resistance on rooted devices.
+- The master password is hashed with PBKDF2 (100,000 iterations, SHA-256 HMAC, 32-byte random salt), making brute-force significantly harder than a plain hash - including on rooted devices.
+- Existing vaults created with the old SHA-256 scheme are silently migrated to PBKDF2 on the next successful login.
 - `android/local.properties` is excluded from version control - it is generated locally by the Flutter toolchain.
 
 ## License
