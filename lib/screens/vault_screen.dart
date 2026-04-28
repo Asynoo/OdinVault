@@ -120,15 +120,15 @@ class _VaultScreenState extends State<VaultScreen> {
                       child: Column(
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          const Icon(Icons.lock_open,
-                              size: 64, color: Colors.white24),
+                          Icon(Icons.lock_open,
+                              size: 64, color: Theme.of(context).colorScheme.onSurface.withAlpha(61)),
                           const SizedBox(height: 16),
                           Text(
                             _search.isEmpty
                                 ? 'No passwords yet.\nTap + to add one.'
                                 : 'No results for "$_search"',
                             textAlign: TextAlign.center,
-                            style: const TextStyle(color: Colors.white38),
+                            style: TextStyle(color: Theme.of(context).colorScheme.onSurfaceVariant),
                           ),
                         ],
                       ),

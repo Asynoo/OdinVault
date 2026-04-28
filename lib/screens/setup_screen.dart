@@ -86,7 +86,7 @@ class _SetupScreenState extends State<SetupScreen> {
                     'Create a master password to secure your vault.',
                     textAlign: TextAlign.center,
                     style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                          color: Colors.white70,
+                          color: Theme.of(context).colorScheme.onSurfaceVariant,
                         ),
                   ),
                   const SizedBox(height: 40),
@@ -118,7 +118,7 @@ class _SetupScreenState extends State<SetupScreen> {
                     LinearProgressIndicator(
                       value: strength,
                       color: _strengthColor(strength),
-                      backgroundColor: Colors.white12,
+                      backgroundColor: Theme.of(context).colorScheme.onSurface.withAlpha(30),
                       minHeight: 6,
                       borderRadius: BorderRadius.circular(3),
                     ),

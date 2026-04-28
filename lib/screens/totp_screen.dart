@@ -88,12 +88,12 @@ class _TotpScreenState extends State<TotpScreen> {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            const Icon(Icons.security, size: 64, color: Colors.white24),
+            Icon(Icons.security, size: 64, color: Theme.of(context).colorScheme.onSurface.withAlpha(61)),
             const SizedBox(height: 16),
-            const Text(
+            Text(
               'No 2FA entries yet.\nTap + to add an authenticator.',
               textAlign: TextAlign.center,
-              style: TextStyle(color: Colors.white38),
+              style: TextStyle(color: Theme.of(context).colorScheme.onSurfaceVariant),
             ),
           ],
         ),
@@ -108,13 +108,13 @@ class _TotpScreenState extends State<TotpScreen> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text('Refreshes in ${_secondsLeft}s',
-                  style: const TextStyle(color: Colors.white54, fontSize: 13)),
+                  style: TextStyle(color: Theme.of(context).colorScheme.onSurfaceVariant, fontSize: 13)),
               SizedBox(
                 width: 120,
                 child: LinearProgressIndicator(
                   value: _secondsLeft / 30,
                   color: _secondsLeft <= 5 ? Colors.red : const Color(0xFF5C6BC0),
-                  backgroundColor: Colors.white12,
+                  backgroundColor: Theme.of(context).colorScheme.onSurface.withAlpha(30),
                   minHeight: 6,
                   borderRadius: BorderRadius.circular(3),
                 ),
@@ -241,9 +241,9 @@ class _AddTotpDialogState extends State<_AddTotpDialog> {
                   (v == null || v.trim().isEmpty) ? 'Required' : null,
             ),
             const SizedBox(height: 8),
-            const Text(
+            Text(
               'Enter the base32 secret key shown when setting up 2FA in your account.',
-              style: TextStyle(fontSize: 11, color: Colors.white54),
+              style: TextStyle(fontSize: 11, color: Theme.of(context).colorScheme.onSurfaceVariant),
             ),
           ],
         ),

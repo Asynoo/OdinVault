@@ -78,7 +78,7 @@ class _PasswordCardState extends State<PasswordCard> {
             title: Text(widget.entry.title,
                 style: const TextStyle(fontWeight: FontWeight.w600)),
             subtitle: Text(widget.entry.username,
-                style: const TextStyle(color: Colors.white54)),
+                style: TextStyle(color: Theme.of(context).colorScheme.onSurfaceVariant)),
             trailing: Row(
               mainAxisSize: MainAxisSize.min,
               children: [
@@ -182,7 +182,7 @@ class _Field extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(label,
-            style: const TextStyle(fontSize: 11, color: Colors.white38)),
+            style: TextStyle(fontSize: 11, color: Theme.of(context).colorScheme.onSurfaceVariant)),
         const SizedBox(height: 2),
         Row(
           children: [
@@ -195,9 +195,9 @@ class _Field extends StatelessWidget {
               InkWell(
                 onTap: onCopy,
                 borderRadius: BorderRadius.circular(4),
-                child: const Padding(
-                  padding: EdgeInsets.all(4),
-                  child: Icon(Icons.copy, size: 16, color: Colors.white38),
+                child: Padding(
+                  padding: const EdgeInsets.all(4),
+                  child: Icon(Icons.copy, size: 16, color: Theme.of(context).colorScheme.onSurfaceVariant),
                 ),
               ),
           ],

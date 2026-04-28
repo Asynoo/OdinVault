@@ -58,7 +58,7 @@ class TotpCard extends StatelessWidget {
             style: const TextStyle(fontWeight: FontWeight.w600)),
         subtitle: entry.issuer.isNotEmpty
             ? Text(entry.issuer,
-                style: const TextStyle(color: Colors.white54, fontSize: 12))
+                style: TextStyle(color: Theme.of(context).colorScheme.onSurfaceVariant, fontSize: 12))
             : null,
         trailing: Row(
           mainAxisSize: MainAxisSize.min,
@@ -81,7 +81,7 @@ class TotpCard extends StatelessWidget {
                   '${secondsLeft}s',
                   style: TextStyle(
                     fontSize: 11,
-                    color: isExpiring ? Colors.red : Colors.white38,
+                    color: isExpiring ? Colors.red : Theme.of(context).colorScheme.onSurfaceVariant,
                   ),
                 ),
               ],
