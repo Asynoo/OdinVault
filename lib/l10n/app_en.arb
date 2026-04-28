@@ -121,5 +121,44 @@
   "togglePasswordTooltip": "Toggle password",
   "copyCodeTooltip": "Copy code",
   "removeTooltip": "Remove",
-  "codeCopied": "Code copied"
+  "codeCopied": "Code copied",
+  "data": "Data",
+  "exportVault": "Export Vault",
+  "exportVaultSubtitle": "Save an encrypted backup file",
+  "importVault": "Import Vault",
+  "importVaultSubtitle": "Restore from a backup file",
+  "exportDialogTitle": "Export Vault",
+  "exportDialogContent": "Enter your master password to create an encrypted backup.",
+  "exportButton": "Export",
+  "exportSuccess": "Vault exported successfully",
+  "importDialogTitle": "Import Vault",
+  "importDialogContent": "Enter the master password used when this backup was created.",
+  "importButton": "Import",
+  "importSuccess": "Imported {passwords} passwords and {totp} 2FA entries",
+  "@importSuccess": {
+    "placeholders": {
+      "passwords": { "type": "int" },
+      "totp": { "type": "int" }
+    }
+  },
+  "importFailed": "Incorrect password or corrupted backup.",
+  "importFileError": "Could not read the selected file.",
+  "generatorTab": "Generator",
+  "regenerate": "Regenerate",
+  "copy": "Copy",
+  "passwordLength": "Length",
+  "includeUppercase": "Uppercase (A-Z)",
+  "includeLowercase": "Lowercase (a-z)",
+  "includeNumbers": "Numbers (0-9)",
+  "includeSymbols": "Symbols (!@#...)",
+  "generatorHistory": "History",
+  "autoLock": "Auto-lock",
+  "autoLockSubtitle": "Lock vault when backgrounded",
+  "autoLockAfter": "Lock after",
+  "lockAfterMinutes": "{n} min",
+  "@lockAfterMinutes": {
+    "placeholders": {
+      "n": { "type": "int" }
+    }
+  }
 }

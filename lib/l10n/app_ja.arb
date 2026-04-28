@@ -121,5 +121,44 @@
   "togglePasswordTooltip": "パスワードの表示切替",
   "copyCodeTooltip": "コードをコピー",
   "removeTooltip": "削除",
-  "codeCopied": "コードをコピーしました"
+  "codeCopied": "コードをコピーしました",
+  "data": "データ",
+  "exportVault": "ボルトをエクスポート",
+  "exportVaultSubtitle": "暗号化されたバックアップファイルを保存",
+  "importVault": "ボルトをインポート",
+  "importVaultSubtitle": "バックアップファイルから復元",
+  "exportDialogTitle": "ボルトをエクスポート",
+  "exportDialogContent": "暗号化されたバックアップを作成するにはマスターパスワードを入力してください。",
+  "exportButton": "エクスポート",
+  "exportSuccess": "ボルトをエクスポートしました",
+  "importDialogTitle": "ボルトをインポート",
+  "importDialogContent": "このバックアップを作成したときのマスターパスワードを入力してください。",
+  "importButton": "インポート",
+  "importSuccess": "{passwords}件のパスワードと{totp}件の2FAエントリをインポートしました",
+  "@importSuccess": {
+    "placeholders": {
+      "passwords": { "type": "int" },
+      "totp": { "type": "int" }
+    }
+  },
+  "importFailed": "パスワードが違うか、バックアップが破損しています。",
+  "importFileError": "選択したファイルを読み込めませんでした。",
+  "generatorTab": "ジェネレーター",
+  "regenerate": "再生成",
+  "copy": "コピー",
+  "passwordLength": "長さ",
+  "includeUppercase": "大文字 (A-Z)",
+  "includeLowercase": "小文字 (a-z)",
+  "includeNumbers": "数字 (0-9)",
+  "includeSymbols": "記号 (!@#...)",
+  "generatorHistory": "履歴",
+  "autoLock": "自動ロック",
+  "autoLockSubtitle": "バックグラウンド時にボルトをロック",
+  "autoLockAfter": "ロックまでの時間",
+  "lockAfterMinutes": "{n} 分",
+  "@lockAfterMinutes": {
+    "placeholders": {
+      "n": { "type": "int" }
+    }
+  }
 }

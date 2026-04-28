@@ -313,4 +313,94 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get codeCopied => 'Code copied';
+
+  @override
+  String get data => 'Data';
+
+  @override
+  String get exportVault => 'Export Vault';
+
+  @override
+  String get exportVaultSubtitle => 'Save an encrypted backup file';
+
+  @override
+  String get importVault => 'Import Vault';
+
+  @override
+  String get importVaultSubtitle => 'Restore from a backup file';
+
+  @override
+  String get exportDialogTitle => 'Export Vault';
+
+  @override
+  String get exportDialogContent =>
+      'Enter your master password to create an encrypted backup.';
+
+  @override
+  String get exportButton => 'Export';
+
+  @override
+  String get exportSuccess => 'Vault exported successfully';
+
+  @override
+  String get importDialogTitle => 'Import Vault';
+
+  @override
+  String get importDialogContent =>
+      'Enter the master password used when this backup was created.';
+
+  @override
+  String get importButton => 'Import';
+
+  @override
+  String importSuccess(int passwords, int totp) {
+    return 'Imported $passwords passwords and $totp 2FA entries';
+  }
+
+  @override
+  String get importFailed => 'Incorrect password or corrupted backup.';
+
+  @override
+  String get importFileError => 'Could not read the selected file.';
+
+  @override
+  String get generatorTab => 'Generator';
+
+  @override
+  String get regenerate => 'Regenerate';
+
+  @override
+  String get copy => 'Copy';
+
+  @override
+  String get passwordLength => 'Length';
+
+  @override
+  String get includeUppercase => 'Uppercase (A-Z)';
+
+  @override
+  String get includeLowercase => 'Lowercase (a-z)';
+
+  @override
+  String get includeNumbers => 'Numbers (0-9)';
+
+  @override
+  String get includeSymbols => 'Symbols (!@#...)';
+
+  @override
+  String get generatorHistory => 'History';
+
+  @override
+  String get autoLock => 'Auto-lock';
+
+  @override
+  String get autoLockSubtitle => 'Lock vault when backgrounded';
+
+  @override
+  String get autoLockAfter => 'Lock after';
+
+  @override
+  String lockAfterMinutes(int n) {
+    return '$n min';
+  }
 }

@@ -314,4 +314,95 @@ class AppLocalizationsDa extends AppLocalizations {
 
   @override
   String get codeCopied => 'Kode kopieret';
+
+  @override
+  String get data => 'Data';
+
+  @override
+  String get exportVault => 'Eksporter boks';
+
+  @override
+  String get exportVaultSubtitle => 'Gem en krypteret sikkerhedskopifil';
+
+  @override
+  String get importVault => 'Importer boks';
+
+  @override
+  String get importVaultSubtitle => 'Gendan fra en sikkerhedskopifil';
+
+  @override
+  String get exportDialogTitle => 'Eksporter boks';
+
+  @override
+  String get exportDialogContent =>
+      'Indtast din hovedadgangskode for at oprette en krypteret sikkerhedskopi.';
+
+  @override
+  String get exportButton => 'Eksporter';
+
+  @override
+  String get exportSuccess => 'Boks eksporteret';
+
+  @override
+  String get importDialogTitle => 'Importer boks';
+
+  @override
+  String get importDialogContent =>
+      'Indtast den hovedadgangskode, der blev brugt til at oprette denne sikkerhedskopi.';
+
+  @override
+  String get importButton => 'Importer';
+
+  @override
+  String importSuccess(int passwords, int totp) {
+    return 'Importerede $passwords adgangskoder og $totp 2FA-poster';
+  }
+
+  @override
+  String get importFailed =>
+      'Forkert adgangskode eller beskadiget sikkerhedskopi.';
+
+  @override
+  String get importFileError => 'Kunne ikke læse den valgte fil.';
+
+  @override
+  String get generatorTab => 'Generator';
+
+  @override
+  String get regenerate => 'Generer';
+
+  @override
+  String get copy => 'Kopiér';
+
+  @override
+  String get passwordLength => 'Længde';
+
+  @override
+  String get includeUppercase => 'Store bogstaver (A-Z)';
+
+  @override
+  String get includeLowercase => 'Små bogstaver (a-z)';
+
+  @override
+  String get includeNumbers => 'Tal (0-9)';
+
+  @override
+  String get includeSymbols => 'Symboler (!@#...)';
+
+  @override
+  String get generatorHistory => 'Historik';
+
+  @override
+  String get autoLock => 'Automatisk lås';
+
+  @override
+  String get autoLockSubtitle => 'Lås boksen, når appen er i baggrunden';
+
+  @override
+  String get autoLockAfter => 'Lås efter';
+
+  @override
+  String lockAfterMinutes(int n) {
+    return '$n min';
+  }
 }

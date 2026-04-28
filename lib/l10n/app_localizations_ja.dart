@@ -310,4 +310,92 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get codeCopied => 'コードをコピーしました';
+
+  @override
+  String get data => 'データ';
+
+  @override
+  String get exportVault => 'ボルトをエクスポート';
+
+  @override
+  String get exportVaultSubtitle => '暗号化されたバックアップファイルを保存';
+
+  @override
+  String get importVault => 'ボルトをインポート';
+
+  @override
+  String get importVaultSubtitle => 'バックアップファイルから復元';
+
+  @override
+  String get exportDialogTitle => 'ボルトをエクスポート';
+
+  @override
+  String get exportDialogContent => '暗号化されたバックアップを作成するにはマスターパスワードを入力してください。';
+
+  @override
+  String get exportButton => 'エクスポート';
+
+  @override
+  String get exportSuccess => 'ボルトをエクスポートしました';
+
+  @override
+  String get importDialogTitle => 'ボルトをインポート';
+
+  @override
+  String get importDialogContent => 'このバックアップを作成したときのマスターパスワードを入力してください。';
+
+  @override
+  String get importButton => 'インポート';
+
+  @override
+  String importSuccess(int passwords, int totp) {
+    return '$passwords件のパスワードと$totp件の2FAエントリをインポートしました';
+  }
+
+  @override
+  String get importFailed => 'パスワードが違うか、バックアップが破損しています。';
+
+  @override
+  String get importFileError => '選択したファイルを読み込めませんでした。';
+
+  @override
+  String get generatorTab => 'ジェネレーター';
+
+  @override
+  String get regenerate => '再生成';
+
+  @override
+  String get copy => 'コピー';
+
+  @override
+  String get passwordLength => '長さ';
+
+  @override
+  String get includeUppercase => '大文字 (A-Z)';
+
+  @override
+  String get includeLowercase => '小文字 (a-z)';
+
+  @override
+  String get includeNumbers => '数字 (0-9)';
+
+  @override
+  String get includeSymbols => '記号 (!@#...)';
+
+  @override
+  String get generatorHistory => '履歴';
+
+  @override
+  String get autoLock => '自動ロック';
+
+  @override
+  String get autoLockSubtitle => 'バックグラウンド時にボルトをロック';
+
+  @override
+  String get autoLockAfter => 'ロックまでの時間';
+
+  @override
+  String lockAfterMinutes(int n) {
+    return '$n 分';
+  }
 }

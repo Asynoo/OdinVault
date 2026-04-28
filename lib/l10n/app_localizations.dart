@@ -681,6 +681,174 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Code copied'**
   String get codeCopied;
+
+  /// No description provided for @data.
+  ///
+  /// In en, this message translates to:
+  /// **'Data'**
+  String get data;
+
+  /// No description provided for @exportVault.
+  ///
+  /// In en, this message translates to:
+  /// **'Export Vault'**
+  String get exportVault;
+
+  /// No description provided for @exportVaultSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Save an encrypted backup file'**
+  String get exportVaultSubtitle;
+
+  /// No description provided for @importVault.
+  ///
+  /// In en, this message translates to:
+  /// **'Import Vault'**
+  String get importVault;
+
+  /// No description provided for @importVaultSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Restore from a backup file'**
+  String get importVaultSubtitle;
+
+  /// No description provided for @exportDialogTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Export Vault'**
+  String get exportDialogTitle;
+
+  /// No description provided for @exportDialogContent.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter your master password to create an encrypted backup.'**
+  String get exportDialogContent;
+
+  /// No description provided for @exportButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Export'**
+  String get exportButton;
+
+  /// No description provided for @exportSuccess.
+  ///
+  /// In en, this message translates to:
+  /// **'Vault exported successfully'**
+  String get exportSuccess;
+
+  /// No description provided for @importDialogTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Import Vault'**
+  String get importDialogTitle;
+
+  /// No description provided for @importDialogContent.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter the master password used when this backup was created.'**
+  String get importDialogContent;
+
+  /// No description provided for @importButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Import'**
+  String get importButton;
+
+  /// No description provided for @importSuccess.
+  ///
+  /// In en, this message translates to:
+  /// **'Imported {passwords} passwords and {totp} 2FA entries'**
+  String importSuccess(int passwords, int totp);
+
+  /// No description provided for @importFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Incorrect password or corrupted backup.'**
+  String get importFailed;
+
+  /// No description provided for @importFileError.
+  ///
+  /// In en, this message translates to:
+  /// **'Could not read the selected file.'**
+  String get importFileError;
+
+  /// No description provided for @generatorTab.
+  ///
+  /// In en, this message translates to:
+  /// **'Generator'**
+  String get generatorTab;
+
+  /// No description provided for @regenerate.
+  ///
+  /// In en, this message translates to:
+  /// **'Regenerate'**
+  String get regenerate;
+
+  /// No description provided for @copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Copy'**
+  String get copy;
+
+  /// No description provided for @passwordLength.
+  ///
+  /// In en, this message translates to:
+  /// **'Length'**
+  String get passwordLength;
+
+  /// No description provided for @includeUppercase.
+  ///
+  /// In en, this message translates to:
+  /// **'Uppercase (A-Z)'**
+  String get includeUppercase;
+
+  /// No description provided for @includeLowercase.
+  ///
+  /// In en, this message translates to:
+  /// **'Lowercase (a-z)'**
+  String get includeLowercase;
+
+  /// No description provided for @includeNumbers.
+  ///
+  /// In en, this message translates to:
+  /// **'Numbers (0-9)'**
+  String get includeNumbers;
+
+  /// No description provided for @includeSymbols.
+  ///
+  /// In en, this message translates to:
+  /// **'Symbols (!@#...)'**
+  String get includeSymbols;
+
+  /// No description provided for @generatorHistory.
+  ///
+  /// In en, this message translates to:
+  /// **'History'**
+  String get generatorHistory;
+
+  /// No description provided for @autoLock.
+  ///
+  /// In en, this message translates to:
+  /// **'Auto-lock'**
+  String get autoLock;
+
+  /// No description provided for @autoLockSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Lock vault when backgrounded'**
+  String get autoLockSubtitle;
+
+  /// No description provided for @autoLockAfter.
+  ///
+  /// In en, this message translates to:
+  /// **'Lock after'**
+  String get autoLockAfter;
+
+  /// No description provided for @lockAfterMinutes.
+  ///
+  /// In en, this message translates to:
+  /// **'{n} min'**
+  String lockAfterMinutes(int n);
 }
 
 class _AppLocalizationsDelegate

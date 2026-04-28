@@ -121,5 +121,44 @@
   "togglePasswordTooltip": "Skift adgangskodevisning",
   "copyCodeTooltip": "Kopiér kode",
   "removeTooltip": "Fjern",
-  "codeCopied": "Kode kopieret"
+  "codeCopied": "Kode kopieret",
+  "data": "Data",
+  "exportVault": "Eksporter boks",
+  "exportVaultSubtitle": "Gem en krypteret sikkerhedskopifil",
+  "importVault": "Importer boks",
+  "importVaultSubtitle": "Gendan fra en sikkerhedskopifil",
+  "exportDialogTitle": "Eksporter boks",
+  "exportDialogContent": "Indtast din hovedadgangskode for at oprette en krypteret sikkerhedskopi.",
+  "exportButton": "Eksporter",
+  "exportSuccess": "Boks eksporteret",
+  "importDialogTitle": "Importer boks",
+  "importDialogContent": "Indtast den hovedadgangskode, der blev brugt til at oprette denne sikkerhedskopi.",
+  "importButton": "Importer",
+  "importSuccess": "Importerede {passwords} adgangskoder og {totp} 2FA-poster",
+  "@importSuccess": {
+    "placeholders": {
+      "passwords": { "type": "int" },
+      "totp": { "type": "int" }
+    }
+  },
+  "importFailed": "Forkert adgangskode eller beskadiget sikkerhedskopi.",
+  "importFileError": "Kunne ikke læse den valgte fil.",
+  "generatorTab": "Generator",
+  "regenerate": "Generer",
+  "copy": "Kopiér",
+  "passwordLength": "Længde",
+  "includeUppercase": "Store bogstaver (A-Z)",
+  "includeLowercase": "Små bogstaver (a-z)",
+  "includeNumbers": "Tal (0-9)",
+  "includeSymbols": "Symboler (!@#...)",
+  "generatorHistory": "Historik",
+  "autoLock": "Automatisk lås",
+  "autoLockSubtitle": "Lås boksen, når appen er i baggrunden",
+  "autoLockAfter": "Lås efter",
+  "lockAfterMinutes": "{n} min",
+  "@lockAfterMinutes": {
+    "placeholders": {
+      "n": { "type": "int" }
+    }
+  }
 }

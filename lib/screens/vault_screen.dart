@@ -130,7 +130,13 @@ class _VaultScreenState extends State<VaultScreen> {
     final tabs = [
       _buildVaultTab(l),
       TotpScreen(key: _totpKey),
-      SettingsScreen(onLogout: _logout),
+      SettingsScreen(
+        onLogout: _logout,
+        onDataChanged: () {
+          _loadEntries();
+          _totpKey.currentState?.refresh();
+        },
+      ),
     ];
 
     return Scaffold(
