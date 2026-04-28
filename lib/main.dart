@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
+import 'l10n/app_localizations.dart';
 import 'services/auth_service.dart';
+import 'services/locale_service.dart';
 import 'services/theme_service.dart';
 import 'screens/setup_screen.dart';
 import 'screens/login_screen.dart';
@@ -8,7 +11,7 @@ import 'screens/login_screen.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
-  await ThemeService.load();
+  await Future.wait([ThemeService.load(), LocaleService.load()]);
   runApp(const OdinVaultApp());
 }
 
@@ -19,13 +22,24 @@ class OdinVaultApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return ValueListenableBuilder<ThemeMode>(
       valueListenable: ThemeService.notifier,
-      builder: (_, mode, child) => MaterialApp(
-        title: 'Odin Vault',
-        debugShowCheckedModeBanner: false,
-        themeMode: mode,
-        theme: _buildTheme(Brightness.light),
-        darkTheme: _buildTheme(Brightness.dark),
-        home: const _AppEntry(),
+      builder: (_, themeMode, child) => ValueListenableBuilder<Locale>(
+        valueListenable: LocaleService.notifier,
+        builder: (_, locale, child) => MaterialApp(
+          title: 'Odin Vault',
+          debugShowCheckedModeBanner: false,
+          themeMode: themeMode,
+          theme: _buildTheme(Brightness.light),
+          darkTheme: _buildTheme(Brightness.dark),
+          locale: locale,
+          localizationsDelegates: const [
+            AppLocalizations.delegate,
+            GlobalMaterialLocalizations.delegate,
+            GlobalWidgetsLocalizations.delegate,
+            GlobalCupertinoLocalizations.delegate,
+          ],
+          supportedLocales: LocaleService.supported,
+          home: const _AppEntry(),
+        ),
       ),
     );
   }

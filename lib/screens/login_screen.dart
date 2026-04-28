@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../l10n/app_localizations.dart';
 import '../services/auth_service.dart';
 import 'vault_screen.dart';
 
@@ -43,7 +44,7 @@ class _LoginScreenState extends State<LoginScreen> {
     } else {
       setState(() {
         _loading = false;
-        _error = 'Biometric authentication failed.';
+        _error = AppLocalizations.of(context)!.biometricFailed;
       });
     }
   }
@@ -61,7 +62,7 @@ class _LoginScreenState extends State<LoginScreen> {
     } else {
       setState(() {
         _loading = false;
-        _error = 'Incorrect master password.';
+        _error = AppLocalizations.of(context)!.incorrectPassword;
       });
     }
   }
@@ -80,6 +81,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context)!;
     return Scaffold(
       body: SafeArea(
         child: Center(
@@ -93,7 +95,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   const Icon(Icons.shield, size: 80, color: Color(0xFF5C6BC0)),
                   const SizedBox(height: 16),
                   Text(
-                    'Odin Vault',
+                    l.appTitle,
                     textAlign: TextAlign.center,
                     style: Theme.of(context)
                         .textTheme
@@ -102,12 +104,11 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                   const SizedBox(height: 8),
                   Text(
-                    'Enter your master password to unlock.',
+                    l.loginSubtitle,
                     textAlign: TextAlign.center,
-                    style: Theme.of(context)
-                        .textTheme
-                        .bodyMedium
-                        ?.copyWith(color: Theme.of(context).colorScheme.onSurfaceVariant),
+                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                          color: Theme.of(context).colorScheme.onSurfaceVariant,
+                        ),
                   ),
                   const SizedBox(height: 40),
                   TextFormField(
@@ -115,7 +116,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     obscureText: _obscure,
                     autofocus: true,
                     decoration: InputDecoration(
-                      labelText: 'Master Password',
+                      labelText: l.masterPasswordLabel,
                       prefixIcon: const Icon(Icons.lock),
                       suffixIcon: IconButton(
                         icon: Icon(
@@ -127,7 +128,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     ),
                     onFieldSubmitted: (_) => _login(),
                     validator: (v) =>
-                        (v == null || v.isEmpty) ? 'Enter your password' : null,
+                        (v == null || v.isEmpty) ? l.enterYourPassword : null,
                   ),
                   const SizedBox(height: 24),
                   FilledButton(
@@ -141,14 +142,14 @@ class _LoginScreenState extends State<LoginScreen> {
                             width: 20,
                             child: CircularProgressIndicator(strokeWidth: 2),
                           )
-                        : const Text('Unlock', style: TextStyle(fontSize: 16)),
+                        : Text(l.unlockButton, style: const TextStyle(fontSize: 16)),
                   ),
                   if (_bioAvailable && _bioEnabled) ...[
                     const SizedBox(height: 16),
                     OutlinedButton.icon(
                       onPressed: _loading ? null : _tryBiometric,
                       icon: const Icon(Icons.fingerprint),
-                      label: const Text('Use Biometric'),
+                      label: Text(l.useBiometric),
                       style: OutlinedButton.styleFrom(
                         padding: const EdgeInsets.symmetric(vertical: 14),
                       ),

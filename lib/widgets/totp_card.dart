@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import '../l10n/app_localizations.dart';
 import '../models/totp_entry.dart';
 import '../services/totp_service.dart';
 
@@ -18,16 +19,17 @@ class TotpCard extends StatelessWidget {
   });
 
   Future<void> _copyCode(BuildContext context, String code) async {
+    final l = AppLocalizations.of(context)!;
     await Clipboard.setData(ClipboardData(text: code));
     if (!context.mounted) return;
     ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-          content: Text('Code copied'), duration: Duration(seconds: 2)),
+      SnackBar(content: Text(l.codeCopied), duration: const Duration(seconds: 2)),
     );
   }
 
   @override
   Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context)!;
     final code = secret.isEmpty
         ? '------'
         : TotpService.generateCode(secret,
@@ -58,7 +60,8 @@ class TotpCard extends StatelessWidget {
             style: const TextStyle(fontWeight: FontWeight.w600)),
         subtitle: entry.issuer.isNotEmpty
             ? Text(entry.issuer,
-                style: TextStyle(color: Theme.of(context).colorScheme.onSurfaceVariant, fontSize: 12))
+                style: TextStyle(
+                    color: colorScheme.onSurfaceVariant, fontSize: 12))
             : null,
         trailing: Row(
           mainAxisSize: MainAxisSize.min,
@@ -81,7 +84,9 @@ class TotpCard extends StatelessWidget {
                   '${secondsLeft}s',
                   style: TextStyle(
                     fontSize: 11,
-                    color: isExpiring ? Colors.red : Theme.of(context).colorScheme.onSurfaceVariant,
+                    color: isExpiring
+                        ? Colors.red
+                        : colorScheme.onSurfaceVariant,
                   ),
                 ),
               ],
@@ -92,13 +97,13 @@ class TotpCard extends StatelessWidget {
               children: [
                 IconButton(
                   icon: const Icon(Icons.copy, size: 20),
-                  tooltip: 'Copy code',
+                  tooltip: l.copyCodeTooltip,
                   onPressed: () => _copyCode(context, code),
                 ),
                 IconButton(
                   icon: const Icon(Icons.delete_outline,
                       size: 20, color: Colors.red),
-                  tooltip: 'Remove',
+                  tooltip: l.removeTooltip,
                   onPressed: onDelete,
                 ),
               ],

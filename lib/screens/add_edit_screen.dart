@@ -1,5 +1,6 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
+import '../l10n/app_localizations.dart';
 import '../models/password_entry.dart';
 import '../services/auth_service.dart';
 import '../services/database_service.dart';
@@ -100,13 +101,14 @@ class _AddEditScreenState extends State<AddEditScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context)!;
     return Scaffold(
       appBar: AppBar(
-        title: Text(_isEdit ? 'Edit Password' : 'New Password'),
+        title: Text(_isEdit ? l.editPasswordTitle : l.newPasswordTitle),
         actions: [
           TextButton(
             onPressed: _loading ? null : _save,
-            child: const Text('Save', style: TextStyle(fontSize: 16)),
+            child: Text(l.save, style: const TextStyle(fontSize: 16)),
           ),
         ],
       ),
@@ -120,33 +122,33 @@ class _AddEditScreenState extends State<AddEditScreen> {
               TextFormField(
                 controller: _titleCtrl,
                 textCapitalization: TextCapitalization.sentences,
-                decoration: const InputDecoration(
-                  labelText: 'Title *',
-                  hintText: 'e.g. Gmail, Netflix',
-                  prefixIcon: Icon(Icons.label_outline),
-                  border: OutlineInputBorder(),
+                decoration: InputDecoration(
+                  labelText: l.titleField,
+                  hintText: l.titleHint,
+                  prefixIcon: const Icon(Icons.label_outline),
+                  border: const OutlineInputBorder(),
                 ),
                 validator: (v) =>
-                    (v == null || v.trim().isEmpty) ? 'Title is required' : null,
+                    (v == null || v.trim().isEmpty) ? l.titleRequired : null,
               ),
               const SizedBox(height: 16),
               TextFormField(
                 controller: _usernameCtrl,
                 keyboardType: TextInputType.emailAddress,
-                decoration: const InputDecoration(
-                  labelText: 'Username / Email *',
-                  prefixIcon: Icon(Icons.person_outline),
-                  border: OutlineInputBorder(),
+                decoration: InputDecoration(
+                  labelText: l.usernameField,
+                  prefixIcon: const Icon(Icons.person_outline),
+                  border: const OutlineInputBorder(),
                 ),
                 validator: (v) =>
-                    (v == null || v.trim().isEmpty) ? 'Username is required' : null,
+                    (v == null || v.trim().isEmpty) ? l.usernameRequired : null,
               ),
               const SizedBox(height: 16),
               TextFormField(
                 controller: _passwordCtrl,
                 obscureText: _obscure,
                 decoration: InputDecoration(
-                  labelText: 'Password *',
+                  labelText: l.passwordField,
                   prefixIcon: const Icon(Icons.lock_outline),
                   border: const OutlineInputBorder(),
                   suffixIcon: Row(
@@ -156,38 +158,38 @@ class _AddEditScreenState extends State<AddEditScreen> {
                         icon: Icon(
                             _obscure ? Icons.visibility_off : Icons.visibility),
                         onPressed: () => setState(() => _obscure = !_obscure),
-                        tooltip: 'Toggle visibility',
+                        tooltip: l.toggleVisibility,
                       ),
                       IconButton(
                         icon: const Icon(Icons.auto_fix_high),
                         onPressed: _generatePassword,
-                        tooltip: 'Generate password',
+                        tooltip: l.generatePassword,
                       ),
                     ],
                   ),
                 ),
                 validator: (v) =>
-                    (v == null || v.isEmpty) ? 'Password is required' : null,
+                    (v == null || v.isEmpty) ? l.passwordRequired : null,
               ),
               const SizedBox(height: 16),
               TextFormField(
                 controller: _urlCtrl,
                 keyboardType: TextInputType.url,
-                decoration: const InputDecoration(
-                  labelText: 'URL (optional)',
-                  hintText: 'https://example.com',
-                  prefixIcon: Icon(Icons.link),
-                  border: OutlineInputBorder(),
+                decoration: InputDecoration(
+                  labelText: l.urlField,
+                  hintText: l.urlHint,
+                  prefixIcon: const Icon(Icons.link),
+                  border: const OutlineInputBorder(),
                 ),
               ),
               const SizedBox(height: 16),
               TextFormField(
                 controller: _notesCtrl,
                 maxLines: 3,
-                decoration: const InputDecoration(
-                  labelText: 'Notes (optional)',
-                  prefixIcon: Icon(Icons.notes),
-                  border: OutlineInputBorder(),
+                decoration: InputDecoration(
+                  labelText: l.notesField,
+                  prefixIcon: const Icon(Icons.notes),
+                  border: const OutlineInputBorder(),
                   alignLabelWithHint: true,
                 ),
               ),
@@ -204,7 +206,7 @@ class _AddEditScreenState extends State<AddEditScreen> {
                         child: CircularProgressIndicator(strokeWidth: 2),
                       )
                     : Text(
-                        _isEdit ? 'Save Changes' : 'Add Password',
+                        _isEdit ? l.saveChanges : l.addPasswordButton,
                         style: const TextStyle(fontSize: 16),
                       ),
               ),

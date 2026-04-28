@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import '../l10n/app_localizations.dart';
 import '../models/password_entry.dart';
 
 class PasswordCard extends StatefulWidget {
@@ -39,26 +40,27 @@ class _PasswordCardState extends State<PasswordCard> {
   }
 
   Future<void> _copyUsername() async {
+    final l = AppLocalizations.of(context)!;
     await Clipboard.setData(ClipboardData(text: widget.entry.username));
     if (!mounted) return;
     ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-          content: Text('Username copied'), duration: Duration(seconds: 2)),
+      SnackBar(content: Text(l.usernameCopied), duration: const Duration(seconds: 2)),
     );
   }
 
   Future<void> _copyPassword() async {
+    final l = AppLocalizations.of(context)!;
     final pwd = widget.getDecryptedPassword(widget.entry.encryptedPassword);
     await Clipboard.setData(ClipboardData(text: pwd));
     if (!mounted) return;
     ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-          content: Text('Password copied'), duration: Duration(seconds: 2)),
+      SnackBar(content: Text(l.passwordCopied), duration: const Duration(seconds: 2)),
     );
   }
 
   @override
   Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context)!;
     final colorScheme = Theme.of(context).colorScheme;
     return Card(
       margin: const EdgeInsets.only(bottom: 8),
@@ -78,13 +80,13 @@ class _PasswordCardState extends State<PasswordCard> {
             title: Text(widget.entry.title,
                 style: const TextStyle(fontWeight: FontWeight.w600)),
             subtitle: Text(widget.entry.username,
-                style: TextStyle(color: Theme.of(context).colorScheme.onSurfaceVariant)),
+                style: TextStyle(color: colorScheme.onSurfaceVariant)),
             trailing: Row(
               mainAxisSize: MainAxisSize.min,
               children: [
                 IconButton(
                   icon: const Icon(Icons.copy, size: 20),
-                  tooltip: 'Copy password',
+                  tooltip: l.copyPasswordTooltip,
                   onPressed: _copyPassword,
                 ),
                 IconButton(
@@ -106,7 +108,7 @@ class _PasswordCardState extends State<PasswordCard> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   _Field(
-                    label: 'Username',
+                    label: l.usernameLabel,
                     value: widget.entry.username,
                     onCopy: _copyUsername,
                   ),
@@ -115,7 +117,7 @@ class _PasswordCardState extends State<PasswordCard> {
                     children: [
                       Expanded(
                         child: _Field(
-                          label: 'Password',
+                          label: l.passwordLabel,
                           value: _showPassword
                               ? (_decryptedPassword ?? '••••••••')
                               : '••••••••',
@@ -127,19 +129,19 @@ class _PasswordCardState extends State<PasswordCard> {
                             ? Icons.visibility_off
                             : Icons.visibility),
                         onPressed: _revealPassword,
-                        tooltip: 'Toggle password',
+                        tooltip: l.togglePasswordTooltip,
                       ),
                     ],
                   ),
                   if (widget.entry.url != null &&
                       widget.entry.url!.isNotEmpty) ...[
                     const SizedBox(height: 8),
-                    _Field(label: 'URL', value: widget.entry.url!),
+                    _Field(label: l.urlLabel, value: widget.entry.url!),
                   ],
                   if (widget.entry.notes != null &&
                       widget.entry.notes!.isNotEmpty) ...[
                     const SizedBox(height: 8),
-                    _Field(label: 'Notes', value: widget.entry.notes!),
+                    _Field(label: l.notesLabel, value: widget.entry.notes!),
                   ],
                   const SizedBox(height: 8),
                   Row(
@@ -148,13 +150,13 @@ class _PasswordCardState extends State<PasswordCard> {
                       TextButton.icon(
                         onPressed: widget.onEdit,
                         icon: const Icon(Icons.edit, size: 18),
-                        label: const Text('Edit'),
+                        label: Text(l.edit),
                       ),
                       const SizedBox(width: 8),
                       TextButton.icon(
                         onPressed: widget.onDelete,
                         icon: const Icon(Icons.delete_outline, size: 18),
-                        label: const Text('Delete'),
+                        label: Text(l.deleteButton),
                         style: TextButton.styleFrom(foregroundColor: Colors.red),
                       ),
                     ],
@@ -182,7 +184,9 @@ class _Field extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(label,
-            style: TextStyle(fontSize: 11, color: Theme.of(context).colorScheme.onSurfaceVariant)),
+            style: TextStyle(
+                fontSize: 11,
+                color: Theme.of(context).colorScheme.onSurfaceVariant)),
         const SizedBox(height: 2),
         Row(
           children: [
@@ -197,7 +201,9 @@ class _Field extends StatelessWidget {
                 borderRadius: BorderRadius.circular(4),
                 child: Padding(
                   padding: const EdgeInsets.all(4),
-                  child: Icon(Icons.copy, size: 16, color: Theme.of(context).colorScheme.onSurfaceVariant),
+                  child: Icon(Icons.copy,
+                      size: 16,
+                      color: Theme.of(context).colorScheme.onSurfaceVariant),
                 ),
               ),
           ],

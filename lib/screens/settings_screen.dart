@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import '../l10n/app_localizations.dart';
 import '../services/auth_service.dart';
 import '../services/database_service.dart';
+import '../services/locale_service.dart';
 import '../services/theme_service.dart';
 
 class SettingsScreen extends StatefulWidget {
@@ -44,33 +46,33 @@ class _SettingsScreenState extends State<SettingsScreen> {
   }
 
   Future<void> _changePassword() async {
+    final l = AppLocalizations.of(context)!;
     final result = await showDialog<bool>(
       context: context,
       builder: (ctx) => const _ChangePasswordDialog(),
     );
     if (result == true && mounted) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Master password updated.')),
+        SnackBar(content: Text(l.passwordUpdated)),
       );
     }
   }
 
   Future<void> _resetVault() async {
+    final l = AppLocalizations.of(context)!;
     final confirmed = await showDialog<bool>(
       context: context,
       builder: (ctx) => AlertDialog(
-        title: const Text('Reset Vault'),
-        content: const Text(
-          'This will permanently delete ALL passwords, 2FA entries, and your master password. This cannot be undone.',
-        ),
+        title: Text(l.resetVault),
+        content: Text(l.resetVaultContent),
         actions: [
           TextButton(
               onPressed: () => Navigator.pop(ctx, false),
-              child: const Text('Cancel')),
+              child: Text(l.cancel)),
           FilledButton(
             onPressed: () => Navigator.pop(ctx, true),
             style: FilledButton.styleFrom(backgroundColor: Colors.red),
-            child: const Text('Reset Everything'),
+            child: Text(l.resetEverything),
           ),
         ],
       ),
@@ -87,36 +89,82 @@ class _SettingsScreenState extends State<SettingsScreen> {
     widget.onLogout();
   }
 
+  void _pickLanguage() {
+    final l = AppLocalizations.of(context)!;
+    showDialog(
+      context: context,
+      builder: (ctx) => SimpleDialog(
+        title: Text(l.language),
+        children: LocaleService.supported.map((locale) {
+          final name = LocaleService.names[locale.languageCode]!;
+          final selected =
+              LocaleService.notifier.value.languageCode == locale.languageCode;
+          return SimpleDialogOption(
+            onPressed: () {
+              LocaleService.setLocale(locale);
+              Navigator.pop(ctx);
+            },
+            child: Row(
+              children: [
+                Expanded(child: Text(name)),
+                if (selected)
+                  Icon(Icons.check,
+                      size: 18,
+                      color: Theme.of(context).colorScheme.primary),
+              ],
+            ),
+          );
+        }).toList(),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context)!;
+    final currentLocale = LocaleService.notifier.value;
+    final localeName = LocaleService.names[currentLocale.languageCode]!;
+
     return ListView(
       padding: const EdgeInsets.all(16),
       children: [
-        const _SectionHeader('Appearance'),
+        _SectionHeader(l.appearance),
         Card(
-          child: SwitchListTile(
-            title: const Text('Dark Mode'),
-            secondary: const Icon(Icons.dark_mode),
-            value: _themeMode == ThemeMode.dark,
-            onChanged: _toggleTheme,
+          child: Column(
+            children: [
+              SwitchListTile(
+                title: Text(l.darkMode),
+                secondary: const Icon(Icons.dark_mode),
+                value: _themeMode == ThemeMode.dark,
+                onChanged: _toggleTheme,
+              ),
+              ListTile(
+                leading: const Icon(Icons.language),
+                title: Text(l.language),
+                trailing: Text(localeName,
+                    style: TextStyle(
+                        color: Theme.of(context).colorScheme.onSurfaceVariant)),
+                onTap: _pickLanguage,
+              ),
+            ],
           ),
         ),
         const SizedBox(height: 16),
-        const _SectionHeader('Security'),
+        _SectionHeader(l.security),
         Card(
           child: Column(
             children: [
               if (_bioAvailable)
                 SwitchListTile(
-                  title: const Text('Biometric Unlock'),
-                  subtitle: const Text('Use fingerprint to unlock vault'),
+                  title: Text(l.biometricUnlock),
+                  subtitle: Text(l.biometricSubtitle),
                   secondary: const Icon(Icons.fingerprint),
                   value: _bioEnabled,
                   onChanged: _toggleBiometric,
                 ),
               ListTile(
                 leading: const Icon(Icons.key),
-                title: const Text('Change Master Password'),
+                title: Text(l.changeMasterPassword),
                 trailing: const Icon(Icons.chevron_right),
                 onTap: _changePassword,
               ),
@@ -124,24 +172,24 @@ class _SettingsScreenState extends State<SettingsScreen> {
           ),
         ),
         const SizedBox(height: 16),
-        const _SectionHeader('Danger Zone'),
+        _SectionHeader(l.dangerZone),
         Card(
           color: Colors.red.shade900.withAlpha(80),
           child: ListTile(
             leading: const Icon(Icons.delete_forever, color: Colors.red),
-            title: const Text('Reset Vault',
-                style: TextStyle(color: Colors.red)),
-            subtitle: const Text('Delete all data and start over'),
+            title: Text(l.resetVault,
+                style: const TextStyle(color: Colors.red)),
+            subtitle: Text(l.resetVaultSubtitle),
             onTap: _resetVault,
           ),
         ),
         const SizedBox(height: 16),
-        const _SectionHeader('About'),
-        const Card(
+        _SectionHeader(l.about),
+        Card(
           child: ListTile(
-            leading: Icon(Icons.info_outline),
-            title: Text('Odin Vault'),
-            subtitle: Text('v1.0.0 — Local password manager\nAll data stored on this device only.'),
+            leading: const Icon(Icons.info_outline),
+            title: Text(l.appTitle),
+            subtitle: Text(l.aboutSubtitle),
           ),
         ),
       ],
@@ -194,6 +242,7 @@ class _ChangePasswordDialogState extends State<_ChangePasswordDialog> {
   }
 
   Future<void> _submit() async {
+    final l = AppLocalizations.of(context)!;
     if (!_formKey.currentState!.validate()) return;
     setState(() {
       _loading = true;
@@ -203,7 +252,7 @@ class _ChangePasswordDialogState extends State<_ChangePasswordDialog> {
     if (!valid) {
       setState(() {
         _loading = false;
-        _error = 'Current password is incorrect.';
+        _error = l.incorrectCurrentPassword;
       });
       return;
     }
@@ -214,8 +263,9 @@ class _ChangePasswordDialogState extends State<_ChangePasswordDialog> {
 
   @override
   Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context)!;
     return AlertDialog(
-      title: const Text('Change Master Password'),
+      title: Text(l.changePasswordTitle),
       content: Form(
         key: _formKey,
         child: Column(
@@ -230,34 +280,32 @@ class _ChangePasswordDialogState extends State<_ChangePasswordDialog> {
             TextFormField(
               controller: _currentCtrl,
               obscureText: true,
-              decoration: const InputDecoration(labelText: 'Current Password'),
-              validator: (v) =>
-                  (v == null || v.isEmpty) ? 'Required' : null,
+              decoration: InputDecoration(labelText: l.currentPasswordField),
+              validator: (v) => (v == null || v.isEmpty) ? l.required : null,
             ),
             const SizedBox(height: 12),
             TextFormField(
               controller: _newCtrl,
               obscureText: true,
-              decoration: const InputDecoration(labelText: 'New Password'),
-              validator: (v) => (v == null || v.length < 8)
-                  ? 'Minimum 8 characters'
-                  : null,
+              decoration: InputDecoration(labelText: l.newPasswordField),
+              validator: (v) =>
+                  (v == null || v.length < 8) ? l.minimumCharacters : null,
             ),
             const SizedBox(height: 12),
             TextFormField(
               controller: _confirmCtrl,
               obscureText: true,
-              decoration: const InputDecoration(labelText: 'Confirm New Password'),
+              decoration:
+                  InputDecoration(labelText: l.confirmNewPasswordField),
               validator: (v) =>
-                  v != _newCtrl.text ? 'Passwords do not match' : null,
+                  v != _newCtrl.text ? l.passwordsDoNotMatch : null,
             ),
           ],
         ),
       ),
       actions: [
         TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text('Cancel')),
+            onPressed: () => Navigator.pop(context), child: Text(l.cancel)),
         FilledButton(
           onPressed: _loading ? null : _submit,
           child: _loading
@@ -265,7 +313,7 @@ class _ChangePasswordDialogState extends State<_ChangePasswordDialog> {
                   height: 16,
                   width: 16,
                   child: CircularProgressIndicator(strokeWidth: 2))
-              : const Text('Update'),
+              : Text(l.update),
         ),
       ],
     );

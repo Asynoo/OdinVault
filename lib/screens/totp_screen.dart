@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import '../l10n/app_localizations.dart';
 import '../models/totp_entry.dart';
 import '../services/auth_service.dart';
 import '../services/database_service.dart';
@@ -50,19 +51,20 @@ class _TotpScreenState extends State<TotpScreen> {
   }
 
   Future<void> _deleteEntry(TotpEntry entry) async {
+    final l = AppLocalizations.of(context)!;
     final confirm = await showDialog<bool>(
       context: context,
       builder: (ctx) => AlertDialog(
-        title: const Text('Remove 2FA'),
-        content: Text('Remove "${entry.name}"? This cannot be undone.'),
+        title: Text(l.removeTwoFaTitle),
+        content: Text(l.removeTwoFaContent(entry.name)),
         actions: [
           TextButton(
               onPressed: () => Navigator.pop(ctx, false),
-              child: const Text('Cancel')),
+              child: Text(l.cancel)),
           FilledButton(
             onPressed: () => Navigator.pop(ctx, true),
             style: FilledButton.styleFrom(backgroundColor: Colors.red),
-            child: const Text('Remove'),
+            child: Text(l.remove),
           ),
         ],
       ),
@@ -81,6 +83,7 @@ class _TotpScreenState extends State<TotpScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context)!;
     if (_loading) return const Center(child: CircularProgressIndicator());
 
     if (_entries.isEmpty) {
@@ -88,12 +91,15 @@ class _TotpScreenState extends State<TotpScreen> {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Icon(Icons.security, size: 64, color: Theme.of(context).colorScheme.onSurface.withAlpha(61)),
+            Icon(Icons.security,
+                size: 64,
+                color: Theme.of(context).colorScheme.onSurface.withAlpha(61)),
             const SizedBox(height: 16),
             Text(
-              'No 2FA entries yet.\nTap + to add an authenticator.',
+              l.noTotpEntries,
               textAlign: TextAlign.center,
-              style: TextStyle(color: Theme.of(context).colorScheme.onSurfaceVariant),
+              style: TextStyle(
+                  color: Theme.of(context).colorScheme.onSurfaceVariant),
             ),
           ],
         ),
@@ -107,14 +113,19 @@ class _TotpScreenState extends State<TotpScreen> {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text('Refreshes in ${_secondsLeft}s',
-                  style: TextStyle(color: Theme.of(context).colorScheme.onSurfaceVariant, fontSize: 13)),
+              Text(
+                l.refreshesIn(_secondsLeft),
+                style: TextStyle(
+                    color: Theme.of(context).colorScheme.onSurfaceVariant,
+                    fontSize: 13),
+              ),
               SizedBox(
                 width: 120,
                 child: LinearProgressIndicator(
                   value: _secondsLeft / 30,
                   color: _secondsLeft <= 5 ? Colors.red : const Color(0xFF5C6BC0),
-                  backgroundColor: Theme.of(context).colorScheme.onSurface.withAlpha(30),
+                  backgroundColor:
+                      Theme.of(context).colorScheme.onSurface.withAlpha(30),
                   minHeight: 6,
                   borderRadius: BorderRadius.circular(3),
                 ),
@@ -161,8 +172,7 @@ class _TotpFabState extends State<TotpFab> {
     final key = AuthService.sessionKey;
     if (key == null) return;
 
-    final encryptedSecret =
-        EncryptionService.encrypt(result['secret']!, key);
+    final encryptedSecret = EncryptionService.encrypt(result['secret']!, key);
     final entry = TotpEntry(
       name: result['name']!,
       issuer: result['issuer'] ?? '',
@@ -178,9 +188,10 @@ class _TotpFabState extends State<TotpFab> {
 
   @override
   Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context)!;
     return FloatingActionButton(
       onPressed: _addTotp,
-      tooltip: 'Add 2FA',
+      tooltip: l.addTwoFaTooltip,
       child: const Icon(Icons.add),
     );
   }
@@ -209,8 +220,9 @@ class _AddTotpDialogState extends State<_AddTotpDialog> {
 
   @override
   Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context)!;
     return AlertDialog(
-      title: const Text('Add 2FA Account'),
+      title: Text(l.addTwoFaTitle),
       content: Form(
         key: _formKey,
         child: Column(
@@ -218,40 +230,40 @@ class _AddTotpDialogState extends State<_AddTotpDialog> {
           children: [
             TextFormField(
               controller: _nameCtrl,
-              decoration: const InputDecoration(
-                  labelText: 'Account Name *',
-                  hintText: 'e.g. john@gmail.com'),
+              decoration: InputDecoration(
+                  labelText: l.accountNameField, hintText: l.accountNameHint),
               validator: (v) =>
-                  (v == null || v.trim().isEmpty) ? 'Required' : null,
+                  (v == null || v.trim().isEmpty) ? l.required : null,
             ),
             const SizedBox(height: 12),
             TextFormField(
               controller: _issuerCtrl,
-              decoration: const InputDecoration(
-                  labelText: 'Issuer', hintText: 'e.g. Google'),
+              decoration: InputDecoration(
+                  labelText: l.issuerField, hintText: l.issuerHint),
             ),
             const SizedBox(height: 12),
             TextFormField(
               controller: _secretCtrl,
-              decoration: const InputDecoration(
-                labelText: 'Secret Key *',
-                hintText: 'Base32 secret from your app',
+              decoration: InputDecoration(
+                labelText: l.secretKeyField,
+                hintText: l.secretKeyHint,
               ),
               validator: (v) =>
-                  (v == null || v.trim().isEmpty) ? 'Required' : null,
+                  (v == null || v.trim().isEmpty) ? l.required : null,
             ),
             const SizedBox(height: 8),
             Text(
-              'Enter the base32 secret key shown when setting up 2FA in your account.',
-              style: TextStyle(fontSize: 11, color: Theme.of(context).colorScheme.onSurfaceVariant),
+              l.secretKeyHelp,
+              style: TextStyle(
+                  fontSize: 11,
+                  color: Theme.of(context).colorScheme.onSurfaceVariant),
             ),
           ],
         ),
       ),
       actions: [
         TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text('Cancel')),
+            onPressed: () => Navigator.pop(context), child: Text(l.cancel)),
         FilledButton(
           onPressed: () {
             if (_formKey.currentState!.validate()) {
@@ -262,7 +274,7 @@ class _AddTotpDialogState extends State<_AddTotpDialog> {
               });
             }
           },
-          child: const Text('Add'),
+          child: Text(l.add),
         ),
       ],
     );

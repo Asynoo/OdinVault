@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../l10n/app_localizations.dart';
 import '../services/auth_service.dart';
 import 'vault_screen.dart';
 
@@ -34,10 +35,10 @@ class _SetupScreenState extends State<SetupScreen> {
     return Colors.green;
   }
 
-  String _strengthLabel(double strength) {
-    if (strength < 0.4) return 'Weak';
-    if (strength < 0.7) return 'Fair';
-    return 'Strong';
+  String _strengthLabel(double strength, AppLocalizations l) {
+    if (strength < 0.4) return l.strengthWeak;
+    if (strength < 0.7) return l.strengthFair;
+    return l.strengthStrong;
   }
 
   Future<void> _create() async {
@@ -59,6 +60,7 @@ class _SetupScreenState extends State<SetupScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context)!;
     final strength = _passwordStrength(_passwordCtrl.text);
 
     return Scaffold(
@@ -74,7 +76,7 @@ class _SetupScreenState extends State<SetupScreen> {
                   const Icon(Icons.lock_outline, size: 72, color: Color(0xFF5C6BC0)),
                   const SizedBox(height: 16),
                   Text(
-                    'Odin Vault',
+                    l.appTitle,
                     textAlign: TextAlign.center,
                     style: Theme.of(context)
                         .textTheme
@@ -83,7 +85,7 @@ class _SetupScreenState extends State<SetupScreen> {
                   ),
                   const SizedBox(height: 8),
                   Text(
-                    'Create a master password to secure your vault.',
+                    l.createVaultSubtitle,
                     textAlign: TextAlign.center,
                     style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                           color: Theme.of(context).colorScheme.onSurfaceVariant,
@@ -95,7 +97,7 @@ class _SetupScreenState extends State<SetupScreen> {
                     obscureText: _obscurePassword,
                     onChanged: (_) => setState(() {}),
                     decoration: InputDecoration(
-                      labelText: 'Master Password',
+                      labelText: l.masterPasswordLabel,
                       prefixIcon: const Icon(Icons.lock),
                       suffixIcon: IconButton(
                         icon: Icon(_obscurePassword
@@ -107,9 +109,7 @@ class _SetupScreenState extends State<SetupScreen> {
                       border: const OutlineInputBorder(),
                     ),
                     validator: (v) {
-                      if (v == null || v.length < 8) {
-                        return 'Password must be at least 8 characters';
-                      }
+                      if (v == null || v.length < 8) return l.passwordTooShort;
                       return null;
                     },
                   ),
@@ -124,7 +124,7 @@ class _SetupScreenState extends State<SetupScreen> {
                     ),
                     const SizedBox(height: 4),
                     Text(
-                      'Strength: ${_strengthLabel(strength)}',
+                      l.passwordStrength(_strengthLabel(strength, l)),
                       style: TextStyle(
                           color: _strengthColor(strength), fontSize: 12),
                     ),
@@ -135,7 +135,7 @@ class _SetupScreenState extends State<SetupScreen> {
                     controller: _confirmCtrl,
                     obscureText: _obscureConfirm,
                     decoration: InputDecoration(
-                      labelText: 'Confirm Password',
+                      labelText: l.confirmPasswordLabel,
                       prefixIcon: const Icon(Icons.lock_outline),
                       suffixIcon: IconButton(
                         icon: Icon(_obscureConfirm
@@ -147,7 +147,7 @@ class _SetupScreenState extends State<SetupScreen> {
                       border: const OutlineInputBorder(),
                     ),
                     validator: (v) {
-                      if (v != _passwordCtrl.text) return 'Passwords do not match';
+                      if (v != _passwordCtrl.text) return l.passwordsDoNotMatch;
                       return null;
                     },
                   ),
@@ -163,7 +163,7 @@ class _SetupScreenState extends State<SetupScreen> {
                             width: 20,
                             child: CircularProgressIndicator(strokeWidth: 2),
                           )
-                        : const Text('Create Vault', style: TextStyle(fontSize: 16)),
+                        : Text(l.createVaultButton, style: const TextStyle(fontSize: 16)),
                   ),
                 ],
               ),

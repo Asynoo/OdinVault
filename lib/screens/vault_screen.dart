@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../l10n/app_localizations.dart';
 import '../models/password_entry.dart';
 import '../services/auth_service.dart';
 import '../services/database_service.dart';
@@ -69,19 +70,20 @@ class _VaultScreenState extends State<VaultScreen> {
   }
 
   Future<void> _deleteEntry(PasswordEntry entry) async {
+    final l = AppLocalizations.of(context)!;
     final confirm = await showDialog<bool>(
       context: context,
       builder: (ctx) => AlertDialog(
-        title: const Text('Delete Entry'),
-        content: Text('Delete "${entry.title}"? This cannot be undone.'),
+        title: Text(l.deleteEntryTitle),
+        content: Text(l.deleteEntryContent(entry.title)),
         actions: [
           TextButton(
               onPressed: () => Navigator.pop(ctx, false),
-              child: const Text('Cancel')),
+              child: Text(l.cancel)),
           FilledButton(
             onPressed: () => Navigator.pop(ctx, true),
             style: FilledButton.styleFrom(backgroundColor: Colors.red),
-            child: const Text('Delete'),
+            child: Text(l.delete),
           ),
         ],
       ),
@@ -98,13 +100,13 @@ class _VaultScreenState extends State<VaultScreen> {
     return EncryptionService.decrypt(encrypted, key);
   }
 
-  Widget _buildVaultTab() {
+  Widget _buildVaultTab(AppLocalizations l) {
     return Column(
       children: [
         Padding(
           padding: const EdgeInsets.fromLTRB(16, 16, 16, 8),
           child: SearchBar(
-            hintText: 'Search passwords...',
+            hintText: l.searchPasswords,
             leading: const Icon(Icons.search),
             onChanged: (v) => setState(() => _search = v),
             padding: const WidgetStatePropertyAll(
@@ -121,14 +123,16 @@ class _VaultScreenState extends State<VaultScreen> {
                         mainAxisSize: MainAxisSize.min,
                         children: [
                           Icon(Icons.lock_open,
-                              size: 64, color: Theme.of(context).colorScheme.onSurface.withAlpha(61)),
+                              size: 64,
+                              color: Theme.of(context).colorScheme.onSurface.withAlpha(61)),
                           const SizedBox(height: 16),
                           Text(
                             _search.isEmpty
-                                ? 'No passwords yet.\nTap + to add one.'
-                                : 'No results for "$_search"',
+                                ? l.noPasswordsYet
+                                : l.noSearchResults(_search),
                             textAlign: TextAlign.center,
-                            style: TextStyle(color: Theme.of(context).colorScheme.onSurfaceVariant),
+                            style: TextStyle(
+                                color: Theme.of(context).colorScheme.onSurfaceVariant),
                           ),
                         ],
                       ),
@@ -150,19 +154,20 @@ class _VaultScreenState extends State<VaultScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context)!;
     final tabs = [
-      _buildVaultTab(),
+      _buildVaultTab(l),
       const TotpScreen(),
       SettingsScreen(onLogout: _logout),
     ];
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Odin Vault'),
+        title: Text(l.appTitle),
         actions: [
           IconButton(
             icon: const Icon(Icons.logout),
-            tooltip: 'Lock',
+            tooltip: l.lockVault,
             onPressed: _logout,
           ),
         ],
@@ -171,7 +176,7 @@ class _VaultScreenState extends State<VaultScreen> {
       floatingActionButton: _navIndex == 0
           ? FloatingActionButton(
               onPressed: _addEntry,
-              tooltip: 'Add password',
+              tooltip: l.addPasswordTooltip,
               child: const Icon(Icons.add),
             )
           : _navIndex == 1
@@ -180,13 +185,13 @@ class _VaultScreenState extends State<VaultScreen> {
       bottomNavigationBar: NavigationBar(
         selectedIndex: _navIndex,
         onDestinationSelected: (i) => setState(() => _navIndex = i),
-        destinations: const [
+        destinations: [
           NavigationDestination(
-              icon: Icon(Icons.password), label: 'Passwords'),
+              icon: const Icon(Icons.password), label: l.passwordsTab),
           NavigationDestination(
-              icon: Icon(Icons.security), label: '2FA'),
+              icon: const Icon(Icons.security), label: l.twoFaTab),
           NavigationDestination(
-              icon: Icon(Icons.settings), label: 'Settings'),
+              icon: const Icon(Icons.settings), label: l.settingsTab),
         ],
       ),
     );
