@@ -121,7 +121,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
         const Card(
           child: ListTile(
             leading: Icon(Icons.info_outline),
-            title: Text('VaultPass'),
+            title: Text('Odin Vault'),
             subtitle: Text('v1.0.0 — Local password manager\nAll data stored on this device only.'),
           ),
         ),

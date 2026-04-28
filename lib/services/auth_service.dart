@@ -74,7 +74,7 @@ class AuthService {
         await _localAuth.canCheckBiometrics || await _localAuth.isDeviceSupported();
     if (!canAuth) return false;
     final didAuth = await _localAuth.authenticate(
-      localizedReason: 'Unlock VaultPass',
+      localizedReason: 'Unlock Odin Vault',
       options: const AuthenticationOptions(stickyAuth: true),
     );
     if (!didAuth) return false;

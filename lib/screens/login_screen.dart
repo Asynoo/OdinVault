@@ -93,7 +93,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   const Icon(Icons.shield, size: 80, color: Color(0xFF5C6BC0)),
                   const SizedBox(height: 16),
                   Text(
-                    'VaultPass',
+                    'Odin Vault',
                     textAlign: TextAlign.center,
                     style: Theme.of(context)
                         .textTheme

@@ -1,4 +1,4 @@
-# VaultPass
+# Odin Vault
 
 A local-first password manager and TOTP authenticator built with Flutter. All data stays on your device - no cloud sync, no accounts.
 

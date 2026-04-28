@@ -7,16 +7,16 @@ import 'screens/login_screen.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
-  runApp(const VaultPassApp());
+  runApp(const OdinVaultApp());
 }
 
-class VaultPassApp extends StatelessWidget {
-  const VaultPassApp({super.key});
+class OdinVaultApp extends StatelessWidget {
+  const OdinVaultApp({super.key});
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'VaultPass',
+      title: 'Odin Vault',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(

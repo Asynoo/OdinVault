@@ -1,11 +1,11 @@
 {
-    "name": "vault_pass",
-    "short_name": "vault_pass",
+    "name": "Odin Vault",
+    "short_name": "Odin Vault",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",
     "theme_color": "#0175C2",
-    "description": "A new Flutter project.",
+    "description": "A local-first password manager and TOTP authenticator.",
     "orientation": "portrait-primary",
     "prefer_related_applications": false,
     "icons": [

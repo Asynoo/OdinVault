@@ -1,9 +1,9 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:vault_pass/main.dart';
+import 'package:odin_vault/main.dart';
 
 void main() {
   testWidgets('App smoke test', (WidgetTester tester) async {
-    await tester.pumpWidget(const VaultPassApp());
-    expect(find.byType(VaultPassApp), findsOneWidget);
+    await tester.pumpWidget(const OdinVaultApp());
+    expect(find.byType(OdinVaultApp), findsOneWidget);
   });
 }

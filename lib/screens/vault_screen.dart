@@ -158,7 +158,7 @@ class _VaultScreenState extends State<VaultScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('VaultPass'),
+        title: const Text('Odin Vault'),
         actions: [
           IconButton(
             icon: const Icon(Icons.logout),
