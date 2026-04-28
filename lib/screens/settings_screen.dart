@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../services/auth_service.dart';
 import '../services/database_service.dart';
+import '../services/theme_service.dart';
 
 class SettingsScreen extends StatefulWidget {
   final VoidCallback onLogout;
@@ -13,6 +14,7 @@ class SettingsScreen extends StatefulWidget {
 class _SettingsScreenState extends State<SettingsScreen> {
   bool _bioEnabled = false;
   bool _bioAvailable = false;
+  ThemeMode _themeMode = ThemeService.notifier.value;
 
   @override
   void initState() {
@@ -26,7 +28,14 @@ class _SettingsScreenState extends State<SettingsScreen> {
     setState(() {
       _bioAvailable = available;
       _bioEnabled = enabled;
+      _themeMode = ThemeService.notifier.value;
     });
+  }
+
+  Future<void> _toggleTheme(bool isDark) async {
+    final mode = isDark ? ThemeMode.dark : ThemeMode.light;
+    await ThemeService.setMode(mode);
+    setState(() => _themeMode = mode);
   }
 
   Future<void> _toggleBiometric(bool val) async {
@@ -83,6 +92,16 @@ class _SettingsScreenState extends State<SettingsScreen> {
     return ListView(
       padding: const EdgeInsets.all(16),
       children: [
+        const _SectionHeader('Appearance'),
+        Card(
+          child: SwitchListTile(
+            title: const Text('Dark Mode'),
+            secondary: const Icon(Icons.dark_mode),
+            value: _themeMode == ThemeMode.dark,
+            onChanged: _toggleTheme,
+          ),
+        ),
+        const SizedBox(height: 16),
         const _SectionHeader('Security'),
         Card(
           child: Column(
