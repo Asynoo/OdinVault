@@ -1,8 +1,10 @@
 import 'dart:convert';
 import 'dart:math';
+import 'dart:typed_data';
 import 'package:crypto/crypto.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:local_auth/local_auth.dart';
+import 'package:pointycastle/export.dart';
 import 'encryption_service.dart';
 
 class AuthService {
@@ -13,6 +15,9 @@ class AuthService {
   static const _keySalt = 'master_salt';
   static const _keyAes = 'aes_key';
   static const _keyBioEnabled = 'biometric_enabled';
+  static const _keyHashVersion = 'hash_version';
+
+  static const _pbkdf2Iterations = 100000;
 
   static String? _sessionKey;
   static final _localAuth = LocalAuthentication();
@@ -26,10 +31,11 @@ class AuthService {
 
   static Future<void> setup(String masterPassword) async {
     final salt = _generateSalt();
-    final hash = _hashPassword(masterPassword, salt);
+    final hash = _pbkdf2Hash(masterPassword, salt);
     final aesKey = EncryptionService.generateKey();
     await _storage.write(key: _keySalt, value: salt);
     await _storage.write(key: _keyHash, value: hash);
+    await _storage.write(key: _keyHashVersion, value: '2');
     await _storage.write(key: _keyAes, value: aesKey);
     _sessionKey = aesKey;
   }
@@ -37,8 +43,26 @@ class AuthService {
   static Future<bool> loginWithPassword(String masterPassword) async {
     final salt = await _storage.read(key: _keySalt);
     final storedHash = await _storage.read(key: _keyHash);
+    final version = await _storage.read(key: _keyHashVersion) ?? '1';
     if (salt == null || storedHash == null) return false;
-    if (_hashPassword(masterPassword, salt) != storedHash) return false;
+
+    final bool matches;
+    if (version == '1') {
+      matches = _sha256Hash(masterPassword, salt) == storedHash;
+    } else {
+      matches = _pbkdf2Hash(masterPassword, salt) == storedHash;
+    }
+
+    if (!matches) return false;
+
+    // Silently upgrade legacy SHA-256 hash to PBKDF2 on successful login
+    if (version == '1') {
+      final newSalt = _generateSalt();
+      await _storage.write(key: _keySalt, value: newSalt);
+      await _storage.write(key: _keyHash, value: _pbkdf2Hash(masterPassword, newSalt));
+      await _storage.write(key: _keyHashVersion, value: '2');
+    }
+
     _sessionKey = await _storage.read(key: _keyAes);
     return _sessionKey != null;
   }
@@ -75,15 +99,17 @@ class AuthService {
   static Future<bool> verifyPassword(String password) async {
     final salt = await _storage.read(key: _keySalt);
     final storedHash = await _storage.read(key: _keyHash);
+    final version = await _storage.read(key: _keyHashVersion) ?? '1';
     if (salt == null || storedHash == null) return false;
-    return _hashPassword(password, salt) == storedHash;
+    if (version == '1') return _sha256Hash(password, salt) == storedHash;
+    return _pbkdf2Hash(password, salt) == storedHash;
   }
 
   static Future<void> changeMasterPassword(String newPassword) async {
     final salt = _generateSalt();
-    final hash = _hashPassword(newPassword, salt);
     await _storage.write(key: _keySalt, value: salt);
-    await _storage.write(key: _keyHash, value: hash);
+    await _storage.write(key: _keyHash, value: _pbkdf2Hash(newPassword, salt));
+    await _storage.write(key: _keyHashVersion, value: '2');
   }
 
   static void logout() {
@@ -101,8 +127,16 @@ class AuthService {
     return base64Encode(bytes);
   }
 
-  static String _hashPassword(String password, String salt) {
-    final bytes = utf8.encode(password + salt);
-    return sha256.convert(bytes).toString();
+  static String _pbkdf2Hash(String password, String salt) {
+    final saltBytes = Uint8List.fromList(base64Decode(salt));
+    final passwordBytes = Uint8List.fromList(utf8.encode(password));
+    final pbkdf2 = PBKDF2KeyDerivator(HMac(SHA256Digest(), 64))
+      ..init(Pbkdf2Parameters(saltBytes, _pbkdf2Iterations, 32));
+    return base64Encode(pbkdf2.process(passwordBytes));
+  }
+
+  // Retained only for migrating existing SHA-256 hashes (hash_version = '1')
+  static String _sha256Hash(String password, String salt) {
+    return sha256.convert(utf8.encode(password + salt)).toString();
   }
 }
