@@ -8,6 +8,7 @@ import '../l10n/app_localizations.dart';
 import '../models/password_entry.dart';
 import '../models/totp_entry.dart';
 import '../services/auth_service.dart';
+import '../services/auto_lock_service.dart';
 import '../services/backup_service.dart';
 import '../services/database_service.dart';
 import '../services/encryption_service.dart';
@@ -29,6 +30,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
   bool _bioEnabled = false;
   bool _bioAvailable = false;
   ThemeMode _themeMode = ThemeService.notifier.value;
+  bool _autoLockEnabled = false;
+  int _autoLockMinutes = 5;
 
   @override
   void initState() {
@@ -37,13 +40,29 @@ class _SettingsScreenState extends State<SettingsScreen> {
   }
 
   Future<void> _loadSettings() async {
-    final available = await AuthService.isBiometricAvailable();
-    final enabled = await AuthService.isBiometricEnabled();
+    final results = await Future.wait([
+      AuthService.isBiometricAvailable(),
+      AuthService.isBiometricEnabled(),
+      AutoLockService.isEnabled(),
+      AutoLockService.getMinutes(),
+    ]);
     setState(() {
-      _bioAvailable = available;
-      _bioEnabled = enabled;
+      _bioAvailable = results[0] as bool;
+      _bioEnabled = results[1] as bool;
+      _autoLockEnabled = results[2] as bool;
+      _autoLockMinutes = results[3] as int;
       _themeMode = ThemeService.notifier.value;
     });
+  }
+
+  Future<void> _toggleAutoLock(bool val) async {
+    await AutoLockService.setEnabled(val);
+    setState(() => _autoLockEnabled = val);
+  }
+
+  Future<void> _setAutoLockMinutes(int minutes) async {
+    await AutoLockService.setMinutes(minutes);
+    setState(() => _autoLockMinutes = minutes);
   }
 
   Future<void> _toggleTheme(bool isDark) async {
@@ -206,6 +225,29 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   secondary: const Icon(Icons.fingerprint),
                   value: _bioEnabled,
                   onChanged: _toggleBiometric,
+                ),
+              SwitchListTile(
+                title: Text(l.autoLock),
+                subtitle: Text(l.autoLockSubtitle),
+                secondary: const Icon(Icons.timer_outlined),
+                value: _autoLockEnabled,
+                onChanged: _toggleAutoLock,
+              ),
+              if (_autoLockEnabled)
+                ListTile(
+                  leading: const Icon(Icons.hourglass_bottom_outlined),
+                  title: Text(l.autoLockAfter),
+                  trailing: DropdownButton<int>(
+                    value: _autoLockMinutes,
+                    underline: const SizedBox.shrink(),
+                    onChanged: (v) => _setAutoLockMinutes(v!),
+                    items: [1, 5, 15, 30]
+                        .map((m) => DropdownMenuItem(
+                              value: m,
+                              child: Text(l.lockAfterMinutes(m)),
+                            ))
+                        .toList(),
+                  ),
                 ),
               ListTile(
                 leading: const Icon(Icons.key),
