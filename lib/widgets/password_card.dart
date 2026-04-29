@@ -3,15 +3,18 @@ import '../l10n/app_localizations.dart';
 import '../models/password_entry.dart';
 import '../services/auth_service.dart';
 import '../utils/clipboard_utils.dart';
+import '../utils/password_health.dart';
 
 class PasswordCard extends StatefulWidget {
   final PasswordEntry entry;
+  final HealthIssue health;
   final VoidCallback onEdit;
   final VoidCallback onDelete;
 
   const PasswordCard({
     super.key,
     required this.entry,
+    this.health = HealthIssue.none,
     required this.onEdit,
     required this.onDelete,
   });
@@ -24,6 +27,17 @@ class _PasswordCardState extends State<PasswordCard> {
   bool _expanded = false;
   bool _showPassword = false;
   String? _decryptedPassword;
+
+  String? _domain(String? url) {
+    if (url == null || url.isEmpty) return null;
+    try {
+      final host = Uri.parse(url).host;
+      if (host.isEmpty) return null;
+      return host.startsWith('www.') ? host.substring(4) : host;
+    } catch (_) {
+      return null;
+    }
+  }
 
   void _toggleExpand() {
     setState(() {
@@ -48,29 +62,60 @@ class _PasswordCardState extends State<PasswordCard> {
     await copyWithFeedback(context, pwd, l.passwordCopied);
   }
 
+  Color get _healthColor => widget.health == HealthIssue.duplicate
+      ? Colors.orange
+      : Colors.red;
+
   @override
   Widget build(BuildContext context) {
     final l = AppLocalizations.of(context)!;
     final colorScheme = Theme.of(context).colorScheme;
+    final domain = _domain(widget.entry.url);
+    final hasIssue = widget.health != HealthIssue.none;
+
     return Card(
       margin: const EdgeInsets.only(bottom: 8),
       child: Column(
         children: [
           ListTile(
-            leading: CircleAvatar(
-              backgroundColor: colorScheme.primaryContainer,
-              child: Text(
-                widget.entry.title[0].toUpperCase(),
-                style: TextStyle(
-                  color: colorScheme.onPrimaryContainer,
-                  fontWeight: FontWeight.bold,
+            leading: Stack(
+              clipBehavior: Clip.none,
+              children: [
+                CircleAvatar(
+                  backgroundColor: colorScheme.primaryContainer,
+                  child: Text(
+                    widget.entry.title[0].toUpperCase(),
+                    style: TextStyle(
+                      color: colorScheme.onPrimaryContainer,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
                 ),
-              ),
+                if (hasIssue)
+                  Positioned(
+                    right: -2,
+                    top: -2,
+                    child: Container(
+                      width: 12,
+                      height: 12,
+                      decoration: BoxDecoration(
+                        color: _healthColor,
+                        shape: BoxShape.circle,
+                        border: Border.all(
+                            color: colorScheme.surface, width: 1.5),
+                      ),
+                    ),
+                  ),
+              ],
             ),
             title: Text(widget.entry.title,
                 style: const TextStyle(fontWeight: FontWeight.w600)),
-            subtitle: Text(widget.entry.username,
-                style: TextStyle(color: colorScheme.onSurfaceVariant)),
+            subtitle: Text(
+              [widget.entry.username, domain]
+                  .whereType<String>()
+                  .join(' · '),
+              style: TextStyle(color: colorScheme.onSurfaceVariant),
+            ),
             trailing: Row(
               mainAxisSize: MainAxisSize.min,
               children: [
@@ -123,6 +168,26 @@ class _PasswordCardState extends State<PasswordCard> {
                       ),
                     ],
                   ),
+                  if (hasIssue) ...[
+                    const SizedBox(height: 4),
+                    Row(
+                      children: [
+                        Icon(Icons.warning_amber_rounded,
+                            size: 14, color: _healthColor),
+                        const SizedBox(width: 4),
+                        Text(
+                          switch (widget.health) {
+                            HealthIssue.both =>
+                              '${l.weakPasswordWarning} · ${l.reusedPasswordWarning}',
+                            HealthIssue.weak => l.weakPasswordWarning,
+                            _ => l.reusedPasswordWarning,
+                          },
+                          style: TextStyle(
+                              fontSize: 12, color: _healthColor),
+                        ),
+                      ],
+                    ),
+                  ],
                   if (widget.entry.url != null &&
                       widget.entry.url!.isNotEmpty) ...[
                     const SizedBox(height: 8),
@@ -147,7 +212,8 @@ class _PasswordCardState extends State<PasswordCard> {
                         onPressed: widget.onDelete,
                         icon: const Icon(Icons.delete_outline, size: 18),
                         label: Text(l.deleteButton),
-                        style: TextButton.styleFrom(foregroundColor: Colors.red),
+                        style:
+                            TextButton.styleFrom(foregroundColor: Colors.red),
                       ),
                     ],
                   ),

@@ -412,4 +412,20 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get scanQrHint => 'Point the camera at an authenticator QR code';
+
+  @override
+  String weakPasswordsCount(int n) {
+    return '$n weak';
+  }
+
+  @override
+  String reusedPasswordsCount(int n) {
+    return '$n reused';
+  }
+
+  @override
+  String get weakPasswordWarning => 'Weak password';
+
+  @override
+  String get reusedPasswordWarning => 'Password reused';
 }

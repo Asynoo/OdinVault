@@ -163,5 +163,15 @@
   },
   "scanQrCode": "Scan QR Code",
   "scanQrButton": "Scan QR",
-  "scanQrHint": "Point the camera at an authenticator QR code"
+  "scanQrHint": "Point the camera at an authenticator QR code",
+  "weakPasswordsCount": "{n} weak",
+  "@weakPasswordsCount": {
+    "placeholders": { "n": { "type": "int" } }
+  },
+  "reusedPasswordsCount": "{n} reused",
+  "@reusedPasswordsCount": {
+    "placeholders": { "n": { "type": "int" } }
+  },
+  "weakPasswordWarning": "Weak password",
+  "reusedPasswordWarning": "Password reused"
 }

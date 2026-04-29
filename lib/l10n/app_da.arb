@@ -163,5 +163,15 @@
   },
   "scanQrCode": "Scan QR-kode",
   "scanQrButton": "Scan QR",
-  "scanQrHint": "Ret kameraet mod en autentificeringskode"
+  "scanQrHint": "Ret kameraet mod en autentificeringskode",
+  "weakPasswordsCount": "{n} svage",
+  "@weakPasswordsCount": {
+    "placeholders": { "n": { "type": "int" } }
+  },
+  "reusedPasswordsCount": "{n} genbrugte",
+  "@reusedPasswordsCount": {
+    "placeholders": { "n": { "type": "int" } }
+  },
+  "weakPasswordWarning": "Svag adgangskode",
+  "reusedPasswordWarning": "Adgangskode genbrugt"
 }

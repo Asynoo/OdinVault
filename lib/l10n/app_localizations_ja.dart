@@ -407,4 +407,20 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get scanQrHint => '認証アプリのQRコードにカメラを向けてください';
+
+  @override
+  String weakPasswordsCount(int n) {
+    return '$n件が脆弱';
+  }
+
+  @override
+  String reusedPasswordsCount(int n) {
+    return '$n件が使い回し';
+  }
+
+  @override
+  String get weakPasswordWarning => '脆弱なパスワード';
+
+  @override
+  String get reusedPasswordWarning => 'パスワードが使い回されています';
 }

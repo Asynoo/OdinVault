@@ -163,5 +163,15 @@
   },
   "scanQrCode": "QRコードをスキャン",
   "scanQrButton": "QRスキャン",
-  "scanQrHint": "認証アプリのQRコードにカメラを向けてください"
+  "scanQrHint": "認証アプリのQRコードにカメラを向けてください",
+  "weakPasswordsCount": "{n}件が脆弱",
+  "@weakPasswordsCount": {
+    "placeholders": { "n": { "type": "int" } }
+  },
+  "reusedPasswordsCount": "{n}件が使い回し",
+  "@reusedPasswordsCount": {
+    "placeholders": { "n": { "type": "int" } }
+  },
+  "weakPasswordWarning": "脆弱なパスワード",
+  "reusedPasswordWarning": "パスワードが使い回されています"
 }

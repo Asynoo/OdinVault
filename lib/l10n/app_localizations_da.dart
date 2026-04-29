@@ -414,4 +414,20 @@ class AppLocalizationsDa extends AppLocalizations {
 
   @override
   String get scanQrHint => 'Ret kameraet mod en autentificeringskode';
+
+  @override
+  String weakPasswordsCount(int n) {
+    return '$n svage';
+  }
+
+  @override
+  String reusedPasswordsCount(int n) {
+    return '$n genbrugte';
+  }
+
+  @override
+  String get weakPasswordWarning => 'Svag adgangskode';
+
+  @override
+  String get reusedPasswordWarning => 'Adgangskode genbrugt';
 }

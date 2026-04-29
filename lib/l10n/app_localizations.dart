@@ -867,6 +867,30 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Point the camera at an authenticator QR code'**
   String get scanQrHint;
+
+  /// No description provided for @weakPasswordsCount.
+  ///
+  /// In en, this message translates to:
+  /// **'{n} weak'**
+  String weakPasswordsCount(int n);
+
+  /// No description provided for @reusedPasswordsCount.
+  ///
+  /// In en, this message translates to:
+  /// **'{n} reused'**
+  String reusedPasswordsCount(int n);
+
+  /// No description provided for @weakPasswordWarning.
+  ///
+  /// In en, this message translates to:
+  /// **'Weak password'**
+  String get weakPasswordWarning;
+
+  /// No description provided for @reusedPasswordWarning.
+  ///
+  /// In en, this message translates to:
+  /// **'Password reused'**
+  String get reusedPasswordWarning;
 }
 
 class _AppLocalizationsDelegate
