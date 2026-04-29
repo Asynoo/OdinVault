@@ -9,6 +9,7 @@ import '../services/totp_service.dart';
 import '../widgets/confirm_dialog.dart';
 import '../widgets/empty_state.dart';
 import '../widgets/totp_card.dart';
+import 'qr_scanner_screen.dart';
 
 class TotpScreen extends StatefulWidget {
   const TotpScreen({super.key});
@@ -191,6 +192,19 @@ class _AddTotpDialogState extends State<_AddTotpDialog> {
     super.dispose();
   }
 
+  Future<void> _scanQr() async {
+    final result = await Navigator.push<Map<String, String>>(
+      context,
+      MaterialPageRoute(builder: (_) => const QrScannerScreen()),
+    );
+    if (result == null) return;
+    setState(() {
+      _nameCtrl.text = result['name'] ?? '';
+      _issuerCtrl.text = result['issuer'] ?? '';
+      _secretCtrl.text = result['secret'] ?? '';
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     final l = AppLocalizations.of(context)!;
@@ -201,6 +215,15 @@ class _AddTotpDialogState extends State<_AddTotpDialog> {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
+            OutlinedButton.icon(
+              onPressed: _scanQr,
+              icon: const Icon(Icons.qr_code_scanner, size: 18),
+              label: Text(l.scanQrButton),
+              style: OutlinedButton.styleFrom(
+                minimumSize: const Size.fromHeight(40),
+              ),
+            ),
+            const SizedBox(height: 16),
             TextFormField(
               controller: _nameCtrl,
               decoration: InputDecoration(

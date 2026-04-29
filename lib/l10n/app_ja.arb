@@ -160,5 +160,8 @@
     "placeholders": {
       "n": { "type": "int" }
     }
-  }
+  },
+  "scanQrCode": "QRコードをスキャン",
+  "scanQrButton": "QRスキャン",
+  "scanQrHint": "認証アプリのQRコードにカメラを向けてください"
 }

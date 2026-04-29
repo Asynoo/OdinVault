@@ -849,6 +849,24 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'{n} min'**
   String lockAfterMinutes(int n);
+
+  /// No description provided for @scanQrCode.
+  ///
+  /// In en, this message translates to:
+  /// **'Scan QR Code'**
+  String get scanQrCode;
+
+  /// No description provided for @scanQrButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Scan QR'**
+  String get scanQrButton;
+
+  /// No description provided for @scanQrHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Point the camera at an authenticator QR code'**
+  String get scanQrHint;
 }
 
 class _AppLocalizationsDelegate

@@ -160,5 +160,8 @@
     "placeholders": {
       "n": { "type": "int" }
     }
-  }
+  },
+  "scanQrCode": "Scan QR Code",
+  "scanQrButton": "Scan QR",
+  "scanQrHint": "Point the camera at an authenticator QR code"
 }

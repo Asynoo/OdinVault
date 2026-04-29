@@ -398,4 +398,13 @@ class AppLocalizationsJa extends AppLocalizations {
   String lockAfterMinutes(int n) {
     return '$n 分';
   }
+
+  @override
+  String get scanQrCode => 'QRコードをスキャン';
+
+  @override
+  String get scanQrButton => 'QRスキャン';
+
+  @override
+  String get scanQrHint => '認証アプリのQRコードにカメラを向けてください';
 }

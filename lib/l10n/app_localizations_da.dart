@@ -405,4 +405,13 @@ class AppLocalizationsDa extends AppLocalizations {
   String lockAfterMinutes(int n) {
     return '$n min';
   }
+
+  @override
+  String get scanQrCode => 'Scan QR-kode';
+
+  @override
+  String get scanQrButton => 'Scan QR';
+
+  @override
+  String get scanQrHint => 'Ret kameraet mod en autentificeringskode';
 }
