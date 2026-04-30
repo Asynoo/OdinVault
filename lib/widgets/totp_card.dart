@@ -35,36 +35,46 @@ class TotpCard extends StatelessWidget {
 
     return Card(
       margin: const EdgeInsets.only(bottom: 8),
-      child: ListTile(
-        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-        leading: CircleAvatar(
-          backgroundColor: colorScheme.secondaryContainer,
-          child: Text(
-            entry.name[0].toUpperCase(),
-            style: TextStyle(
-              color: colorScheme.onSecondaryContainer,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-        ),
-        title: Text(entry.name,
-            style: const TextStyle(fontWeight: FontWeight.w600)),
-        subtitle: entry.issuer.isNotEmpty
-            ? Text(entry.issuer,
-                style: TextStyle(
-                    color: colorScheme.onSurfaceVariant, fontSize: 12))
-            : null,
-        trailing: Row(
-          mainAxisSize: MainAxisSize.min,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+        child: Row(
           children: [
+            CircleAvatar(
+              backgroundColor: colorScheme.secondaryContainer,
+              child: Text(
+                entry.name[0].toUpperCase(),
+                style: TextStyle(
+                  color: colorScheme.onSecondaryContainer,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+            const SizedBox(width: 12),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(entry.name,
+                      style: const TextStyle(fontWeight: FontWeight.w600)),
+                  if (entry.issuer.isNotEmpty)
+                    Text(
+                      entry.issuer,
+                      style: TextStyle(
+                          color: colorScheme.onSurfaceVariant, fontSize: 12),
+                    ),
+                ],
+              ),
+            ),
+            const SizedBox(width: 8),
             Column(
-              mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.end,
+              mainAxisSize: MainAxisSize.min,
               children: [
                 Text(
                   formattedCode,
                   style: TextStyle(
-                    fontSize: 24,
+                    fontSize: 22,
                     fontWeight: FontWeight.bold,
                     letterSpacing: 2,
                     color: isExpiring ? Colors.red : colorScheme.primary,
@@ -75,21 +85,21 @@ class TotpCard extends StatelessWidget {
                   '${secondsLeft}s',
                   style: TextStyle(
                     fontSize: 11,
-                    color: isExpiring
-                        ? Colors.red
-                        : colorScheme.onSurfaceVariant,
+                    color:
+                        isExpiring ? Colors.red : colorScheme.onSurfaceVariant,
                   ),
                 ),
               ],
             ),
-            const SizedBox(width: 8),
+            const SizedBox(width: 4),
             Column(
-              mainAxisAlignment: MainAxisAlignment.center,
+              mainAxisSize: MainAxisSize.min,
               children: [
                 IconButton(
                   icon: const Icon(Icons.copy, size: 20),
                   tooltip: l.copyCodeTooltip,
-                  onPressed: () => copyWithFeedback(context, code, l.codeCopied),
+                  onPressed: () =>
+                      copyWithFeedback(context, code, l.codeCopied),
                 ),
                 IconButton(
                   icon: const Icon(Icons.delete_outline,
