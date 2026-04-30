@@ -212,9 +212,10 @@ class _AddTotpDialogState extends State<_AddTotpDialog> {
       title: Text(l.addTwoFaTitle),
       content: Form(
         key: _formKey,
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
+        child: SingleChildScrollView(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
             OutlinedButton.icon(
               onPressed: _scanQr,
               icon: const Icon(Icons.qr_code_scanner, size: 18),
@@ -255,6 +256,7 @@ class _AddTotpDialogState extends State<_AddTotpDialog> {
                   color: Theme.of(context).colorScheme.onSurfaceVariant),
             ),
           ],
+        ),
         ),
       ),
       actions: [
