@@ -1,9 +1,11 @@
+import 'dart:async';
 import 'dart:convert';
 import 'dart:math';
 import 'dart:typed_data';
 import 'package:crypto/crypto.dart';
 import 'package:local_auth/local_auth.dart';
 import 'package:pointycastle/export.dart';
+import 'database_service.dart';
 import 'encryption_service.dart';
 import 'storage.dart';
 
@@ -13,6 +15,7 @@ class AuthService {
   static const _keyAes = 'aes_key';
   static const _keyBioEnabled = 'biometric_enabled';
   static const _keyHashVersion = 'hash_version';
+  static const _keyGcmMigrated = 'gcm_migrated';
 
   static const _pbkdf2Iterations = 100000;
 
@@ -64,6 +67,7 @@ class AuthService {
     }
 
     _sessionKey = await secureStorage.read(key: _keyAes);
+    if (_sessionKey != null) unawaited(_migrateToGcm());
     return _sessionKey != null;
   }
 
@@ -79,6 +83,7 @@ class AuthService {
     );
     if (!didAuth) return false;
     _sessionKey = await secureStorage.read(key: _keyAes);
+    if (_sessionKey != null) unawaited(_migrateToGcm());
     return _sessionKey != null;
   }
 
@@ -110,6 +115,31 @@ class AuthService {
     await secureStorage.write(key: _keySalt, value: salt);
     await secureStorage.write(key: _keyHash, value: _pbkdf2Hash(newPassword, salt));
     await secureStorage.write(key: _keyHashVersion, value: '2');
+  }
+
+  static Future<void> _migrateToGcm() async {
+    final done = await secureStorage.read(key: _keyGcmMigrated);
+    if (done == 'true') return;
+    final passwords = await DatabaseService.getPasswords();
+    for (final e in passwords) {
+      if (!e.encryptedPassword.startsWith('gcm:')) {
+        final plain = EncryptionService.decrypt(e.encryptedPassword, _sessionKey!);
+        await DatabaseService.updatePassword(e.copyWith(
+          encryptedPassword: EncryptionService.encrypt(plain, _sessionKey!),
+          updatedAt: e.updatedAt,
+        ));
+      }
+    }
+    final totps = await DatabaseService.getTotpEntries();
+    for (final e in totps) {
+      if (!e.encryptedSecret.startsWith('gcm:')) {
+        final plain = EncryptionService.decrypt(e.encryptedSecret, _sessionKey!);
+        await DatabaseService.updateTotp(e.copyWithSecret(
+          EncryptionService.encrypt(plain, _sessionKey!),
+        ));
+      }
+    }
+    await secureStorage.write(key: _keyGcmMigrated, value: 'true');
   }
 
   static void logout() {

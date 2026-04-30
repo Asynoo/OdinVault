@@ -27,6 +27,16 @@ class TotpEntry {
         'created_at': createdAt.toIso8601String(),
       };
 
+  TotpEntry copyWithSecret(String encryptedSecret) => TotpEntry(
+        id: id,
+        name: name,
+        issuer: issuer,
+        encryptedSecret: encryptedSecret,
+        digits: digits,
+        period: period,
+        createdAt: createdAt,
+      );
+
   factory TotpEntry.fromMap(Map<String, dynamic> map) => TotpEntry(
         id: map['id'] as int?,
         name: map['name'] as String,

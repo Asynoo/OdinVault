@@ -84,6 +84,16 @@ class DatabaseService {
     return database.insert(tableTotp, entry.toMap()..remove('id'));
   }
 
+  static Future<void> updateTotp(TotpEntry entry) async {
+    final database = await db;
+    await database.update(
+      tableTotp,
+      entry.toMap()..remove('id'),
+      where: 'id = ?',
+      whereArgs: [entry.id],
+    );
+  }
+
   static Future<void> deleteTotp(int id) async {
     final database = await db;
     await database.delete(tableTotp, where: 'id = ?', whereArgs: [id]);

@@ -99,8 +99,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
   Future<void> _importVault() async {
     final l = AppLocalizations.of(context)!;
     final result = await FilePicker.platform.pickFiles(
-      type: FileType.custom,
-      allowedExtensions: ['ovault'],
+      type: FileType.any,
       withData: true,
     );
     if (result == null || result.files.single.bytes == null) return;
