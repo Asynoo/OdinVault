@@ -61,6 +61,7 @@
   "addPasswordButton": "パスワードを追加",
   "toggleVisibility": "表示切替",
   "generatePassword": "パスワードを生成",
+  "searchTwoFa": "2FAアカウントを検索...",
   "noTotpEntries": "2FAエントリがありません。\n＋をタップして認証アプリを追加してください。",
   "refreshesIn": "{seconds}秒後に更新",
   "@refreshesIn": {

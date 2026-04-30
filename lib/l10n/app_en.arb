@@ -61,6 +61,7 @@
   "addPasswordButton": "Add Password",
   "toggleVisibility": "Toggle visibility",
   "generatePassword": "Generate password",
+  "searchTwoFa": "Search 2FA accounts...",
   "noTotpEntries": "No 2FA entries yet.\nTap + to add an authenticator.",
   "refreshesIn": "Refreshes in {seconds}s",
   "@refreshesIn": {

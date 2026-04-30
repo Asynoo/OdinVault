@@ -61,7 +61,8 @@
   "addPasswordButton": "Tilføj adgangskode",
   "toggleVisibility": "Skift synlighed",
   "generatePassword": "Generer adgangskode",
-  "noTotpEntries": "Ingen 2FA-poster endnu.\nTryk på + for at tilføje en.",
+  "searchTwoFa": "Søg 2FA-konti...",
+  "noTotpEntries":"Ingen 2FA-poster endnu.\nTryk på + for at tilføje en.",
   "refreshesIn": "Opdateres om {seconds}s",
   "@refreshesIn": {
     "placeholders": {

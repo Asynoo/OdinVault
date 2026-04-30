@@ -376,6 +376,12 @@ abstract class AppLocalizations {
   /// **'Generate password'**
   String get generatePassword;
 
+  /// No description provided for @searchTwoFa.
+  ///
+  /// In en, this message translates to:
+  /// **'Search 2FA accounts...'**
+  String get searchTwoFa;
+
   /// No description provided for @noTotpEntries.
   ///
   /// In en, this message translates to:

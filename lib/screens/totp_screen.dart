@@ -23,6 +23,7 @@ class TotpScreenState extends State<TotpScreen> {
   Timer? _timer;
   int _secondsLeft = 30;
   bool _loading = true;
+  String _search = '';
 
   @override
   void initState() {
@@ -41,6 +42,16 @@ class TotpScreenState extends State<TotpScreen> {
   }
 
   void refresh() => _loadEntries();
+
+  List<TotpEntry> get _filtered {
+    if (_search.isEmpty) return _entries;
+    final q = _search.toLowerCase();
+    return _entries
+        .where((e) =>
+            e.name.toLowerCase().contains(q) ||
+            e.issuer.toLowerCase().contains(q))
+        .toList();
+  }
 
   void _startTimer() {
     _secondsLeft = TotpService.secondsRemaining();
@@ -75,14 +86,23 @@ class TotpScreenState extends State<TotpScreen> {
     final l = AppLocalizations.of(context)!;
     if (_loading) return const Center(child: CircularProgressIndicator());
 
-    if (_entries.isEmpty) {
-      return EmptyState(icon: Icons.security, message: l.noTotpEntries);
-    }
+    final filtered = _filtered;
 
     return Column(
       children: [
         Padding(
-          padding: const EdgeInsets.fromLTRB(16, 16, 16, 4),
+          padding: const EdgeInsets.fromLTRB(16, 16, 16, 8),
+          child: SearchBar(
+            hintText: l.searchTwoFa,
+            leading: const Icon(Icons.search),
+            onChanged: (v) => setState(() => _search = v),
+            padding: const WidgetStatePropertyAll(
+              EdgeInsets.symmetric(horizontal: 16),
+            ),
+          ),
+        ),
+        Padding(
+          padding: const EdgeInsets.fromLTRB(16, 0, 16, 4),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -109,20 +129,28 @@ class TotpScreenState extends State<TotpScreen> {
           ),
         ),
         Expanded(
-          child: ListView.builder(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-            itemCount: _entries.length,
-            itemBuilder: (_, i) {
-              final entry = _entries[i];
-              final secret = AuthService.decrypt(entry.encryptedSecret);
-              return TotpCard(
-                entry: entry,
-                secret: secret,
-                secondsLeft: _secondsLeft,
-                onDelete: () => _deleteEntry(entry),
-              );
-            },
-          ),
+          child: filtered.isEmpty
+              ? EmptyState(
+                  icon: Icons.security,
+                  message: _search.isEmpty
+                      ? l.noTotpEntries
+                      : l.noSearchResults(_search),
+                )
+              : ListView.builder(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                  itemCount: filtered.length,
+                  itemBuilder: (_, i) {
+                    final entry = filtered[i];
+                    final secret = AuthService.decrypt(entry.encryptedSecret);
+                    return TotpCard(
+                      entry: entry,
+                      secret: secret,
+                      secondsLeft: _secondsLeft,
+                      onDelete: () => _deleteEntry(entry),
+                    );
+                  },
+                ),
         ),
       ],
     );

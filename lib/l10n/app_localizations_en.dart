@@ -154,6 +154,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get generatePassword => 'Generate password';
 
   @override
+  String get searchTwoFa => 'Search 2FA accounts...';
+
+  @override
   String get noTotpEntries =>
       'No 2FA entries yet.\nTap + to add an authenticator.';
 

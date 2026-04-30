@@ -155,6 +155,9 @@ class AppLocalizationsDa extends AppLocalizations {
   String get generatePassword => 'Generer adgangskode';
 
   @override
+  String get searchTwoFa => 'Søg 2FA-konti...';
+
+  @override
   String get noTotpEntries =>
       'Ingen 2FA-poster endnu.\nTryk på + for at tilføje en.';
 

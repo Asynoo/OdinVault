@@ -153,6 +153,9 @@ class AppLocalizationsJa extends AppLocalizations {
   String get generatePassword => 'パスワードを生成';
 
   @override
+  String get searchTwoFa => '2FAアカウントを検索...';
+
+  @override
   String get noTotpEntries => '2FAエントリがありません。\n＋をタップして認証アプリを追加してください。';
 
   @override
