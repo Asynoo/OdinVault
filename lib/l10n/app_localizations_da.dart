@@ -128,7 +128,7 @@ class AppLocalizationsDa extends AppLocalizations {
   String get urlField => 'URL (valgfri)';
 
   @override
-  String get urlHint => 'https://eksempel.dk';
+  String get urlHint => 'https://example.com';
 
   @override
   String get notesField => 'Noter (valgfri)';
@@ -419,7 +419,8 @@ class AppLocalizationsDa extends AppLocalizations {
   String get scanQrButton => 'Scan QR';
 
   @override
-  String get scanQrHint => 'Ret kameraet mod en autentificeringskode';
+  String get scanQrHint =>
+      'Ret kameraet mod en QR-kode fra din autentificeringsapp';
 
   @override
   String weakPasswordsCount(int n) {
