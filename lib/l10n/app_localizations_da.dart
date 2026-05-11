@@ -485,4 +485,9 @@ class AppLocalizationsDa extends AppLocalizations {
 
   @override
   String get importCsvError => 'Kunne ikke læse CSV-filen';
+
+  @override
+  String accountLocked(String remaining) {
+    return 'For mange fejlede forsøg. Prøv igen om $remaining.';
+  }
 }

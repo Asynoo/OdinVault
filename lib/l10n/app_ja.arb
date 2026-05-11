@@ -201,5 +201,11 @@
       "count": { "type": "int" }
     }
   },
-  "importCsvError": "CSVファイルを解析できませんでした"
+  "importCsvError": "CSVファイルを解析できませんでした",
+  "accountLocked": "試行回数が多すぎます。{remaining}後に再試行してください。",
+  "@accountLocked": {
+    "placeholders": {
+      "remaining": { "type": "String" }
+    }
+  }
 }

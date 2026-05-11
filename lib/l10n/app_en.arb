@@ -201,5 +201,11 @@
       "count": { "type": "int" }
     }
   },
-  "importCsvError": "Could not parse the CSV file"
+  "importCsvError": "Could not parse the CSV file",
+  "accountLocked": "Too many failed attempts. Try again in {remaining}.",
+  "@accountLocked": {
+    "placeholders": {
+      "remaining": { "type": "String" }
+    }
+  }
 }

@@ -18,11 +18,19 @@ class _LoginScreenState extends State<LoginScreen> {
   bool _bioAvailable = false;
   bool _bioEnabled = false;
   String? _error;
+  Duration? _lockoutRemaining;
 
   @override
   void initState() {
     super.initState();
     _checkBiometric();
+    _refreshLockout();
+  }
+
+  Future<void> _refreshLockout() async {
+    final remaining = await AuthService.getLockoutRemaining();
+    if (!mounted) return;
+    setState(() => _lockoutRemaining = remaining);
   }
 
   Future<void> _checkBiometric() async {
@@ -35,6 +43,15 @@ class _LoginScreenState extends State<LoginScreen> {
       _bioEnabled = results[1];
     });
     if (results[0] && results[1]) _tryBiometric();
+  }
+
+  String _formatDuration(Duration d) {
+    if (d.inHours > 0) {
+      final h = d.inHours;
+      final m = d.inMinutes % 60;
+      return m > 0 ? '${h}h ${m}m' : '${h}h';
+    }
+    return '${d.inMinutes + 1}m';
   }
 
   Future<void> _tryBiometric() async {
@@ -52,19 +69,28 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   Future<void> _login() async {
+    final lockout = await AuthService.getLockoutRemaining();
+    if (lockout != null) {
+      setState(() => _lockoutRemaining = lockout);
+      return;
+    }
     if (!_formKey.currentState!.validate()) return;
     setState(() {
       _loading = true;
       _error = null;
+      _lockoutRemaining = null;
     });
     final success = await AuthService.loginWithPassword(_passwordCtrl.text);
     if (!mounted) return;
     if (success) {
       _goToVault();
     } else {
+      final newLockout = await AuthService.getLockoutRemaining();
+      if (!mounted) return;
       setState(() {
         _loading = false;
-        _error = AppLocalizations.of(context)!.incorrectPassword;
+        _lockoutRemaining = newLockout;
+        _error = newLockout == null ? AppLocalizations.of(context)!.incorrectPassword : null;
       });
     }
   }
@@ -120,14 +146,20 @@ class _LoginScreenState extends State<LoginScreen> {
                     validator: (v) =>
                         (v == null || v.isEmpty) ? l.enterYourPassword : null,
                   ),
-                  if (_error != null) ...[
+                  if (_lockoutRemaining != null) ...[
+                    const SizedBox(height: 8),
+                    Text(
+                      l.accountLocked(_formatDuration(_lockoutRemaining!)),
+                      style: const TextStyle(color: Colors.red, fontSize: 13),
+                    ),
+                  ] else if (_error != null) ...[
                     const SizedBox(height: 8),
                     Text(_error!,
                         style: const TextStyle(color: Colors.red, fontSize: 13)),
                   ],
                   const SizedBox(height: 24),
                   FilledButton(
-                    onPressed: _loading ? null : _login,
+                    onPressed: (_loading || _lockoutRemaining != null) ? null : _login,
                     style: FilledButton.styleFrom(
                       padding: const EdgeInsets.symmetric(vertical: 16),
                     ),

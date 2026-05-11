@@ -201,5 +201,11 @@
       "count": { "type": "int" }
     }
   },
-  "importCsvError": "Kunne ikke læse CSV-filen"
+  "importCsvError": "Kunne ikke læse CSV-filen",
+  "accountLocked": "For mange fejlede forsøg. Prøv igen om {remaining}.",
+  "@accountLocked": {
+    "placeholders": {
+      "remaining": { "type": "String" }
+    }
+  }
 }

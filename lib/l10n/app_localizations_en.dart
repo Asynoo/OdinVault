@@ -483,4 +483,9 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get importCsvError => 'Could not parse the CSV file';
+
+  @override
+  String accountLocked(String remaining) {
+    return 'Too many failed attempts. Try again in $remaining.';
+  }
 }

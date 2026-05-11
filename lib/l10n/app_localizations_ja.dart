@@ -478,4 +478,9 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get importCsvError => 'CSVファイルを解析できませんでした';
+
+  @override
+  String accountLocked(String remaining) {
+    return '試行回数が多すぎます。$remaining後に再試行してください。';
+  }
 }
