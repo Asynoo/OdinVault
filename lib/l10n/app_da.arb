@@ -52,7 +52,7 @@
   "usernameField": "Brugernavn / E-mail *",
   "passwordField": "Adgangskode *",
   "urlField": "URL (valgfri)",
-  "urlHint": "https://eksempel.dk",
+  "urlHint": "https://example.com",
   "notesField": "Noter (valgfri)",
   "titleRequired": "Titel er påkrævet",
   "usernameRequired": "Brugernavn er påkrævet",
@@ -165,7 +165,7 @@
   },
   "scanQrCode": "Scan QR-kode",
   "scanQrButton": "Scan QR",
-  "scanQrHint": "Ret kameraet mod en autentificeringskode",
+  "scanQrHint": "Ret kameraet mod en QR-kode fra din autentificeringsapp",
   "weakPasswordsCount": "{n} svage",
   "@weakPasswordsCount": {
     "placeholders": { "n": { "type": "int" } }
