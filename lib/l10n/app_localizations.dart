@@ -963,6 +963,36 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Content is required'**
   String get noteContentRequired;
+
+  /// No description provided for @importCsv.
+  ///
+  /// In en, this message translates to:
+  /// **'Import from CSV'**
+  String get importCsv;
+
+  /// No description provided for @importCsvSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'LastPass, Bitwarden, 1Password, ProtonPass'**
+  String get importCsvSubtitle;
+
+  /// No description provided for @importCsvFound.
+  ///
+  /// In en, this message translates to:
+  /// **'Found {count} entries from {format}. Import?'**
+  String importCsvFound(int count, String format);
+
+  /// No description provided for @importCsvSuccess.
+  ///
+  /// In en, this message translates to:
+  /// **'Imported {count} entries'**
+  String importCsvSuccess(int count);
+
+  /// No description provided for @importCsvError.
+  ///
+  /// In en, this message translates to:
+  /// **'Could not parse the CSV file'**
+  String get importCsvError;
 }
 
 class _AppLocalizationsDelegate

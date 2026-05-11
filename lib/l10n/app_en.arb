@@ -185,5 +185,21 @@
   "deleteNoteTitle": "Delete Note",
   "noteContentField": "Content *",
   "noteContentHint": "Write your note here...",
-  "noteContentRequired": "Content is required"
+  "noteContentRequired": "Content is required",
+  "importCsv": "Import from CSV",
+  "importCsvSubtitle": "LastPass, Bitwarden, 1Password, ProtonPass",
+  "importCsvFound": "Found {count} entries from {format}. Import?",
+  "@importCsvFound": {
+    "placeholders": {
+      "count": { "type": "int" },
+      "format": { "type": "String" }
+    }
+  },
+  "importCsvSuccess": "Imported {count} entries",
+  "@importCsvSuccess": {
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+  "importCsvError": "Could not parse the CSV file"
 }

@@ -459,4 +459,23 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get noteContentRequired => '内容は必須です';
+
+  @override
+  String get importCsv => 'CSVからインポート';
+
+  @override
+  String get importCsvSubtitle => 'LastPass・Bitwarden・1Password・ProtonPass';
+
+  @override
+  String importCsvFound(int count, String format) {
+    return '$formatから$count件見つかりました。インポートしますか？';
+  }
+
+  @override
+  String importCsvSuccess(int count) {
+    return '$count件をインポートしました';
+  }
+
+  @override
+  String get importCsvError => 'CSVファイルを解析できませんでした';
 }

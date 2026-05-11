@@ -466,4 +466,23 @@ class AppLocalizationsDa extends AppLocalizations {
 
   @override
   String get noteContentRequired => 'Indhold er påkrævet';
+
+  @override
+  String get importCsv => 'Importer fra CSV';
+
+  @override
+  String get importCsvSubtitle => 'LastPass, Bitwarden, 1Password, ProtonPass';
+
+  @override
+  String importCsvFound(int count, String format) {
+    return 'Fandt $count poster fra $format. Importér?';
+  }
+
+  @override
+  String importCsvSuccess(int count) {
+    return 'Importerede $count poster';
+  }
+
+  @override
+  String get importCsvError => 'Kunne ikke læse CSV-filen';
 }

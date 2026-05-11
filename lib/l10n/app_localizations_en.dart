@@ -464,4 +464,23 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get noteContentRequired => 'Content is required';
+
+  @override
+  String get importCsv => 'Import from CSV';
+
+  @override
+  String get importCsvSubtitle => 'LastPass, Bitwarden, 1Password, ProtonPass';
+
+  @override
+  String importCsvFound(int count, String format) {
+    return 'Found $count entries from $format. Import?';
+  }
+
+  @override
+  String importCsvSuccess(int count) {
+    return 'Imported $count entries';
+  }
+
+  @override
+  String get importCsvError => 'Could not parse the CSV file';
 }

@@ -185,5 +185,21 @@
   "deleteNoteTitle": "Slet note",
   "noteContentField": "Indhold *",
   "noteContentHint": "Skriv din note her...",
-  "noteContentRequired": "Indhold er påkrævet"
+  "noteContentRequired": "Indhold er påkrævet",
+  "importCsv": "Importer fra CSV",
+  "importCsvSubtitle": "LastPass, Bitwarden, 1Password, ProtonPass",
+  "importCsvFound": "Fandt {count} poster fra {format}. Importér?",
+  "@importCsvFound": {
+    "placeholders": {
+      "count": { "type": "int" },
+      "format": { "type": "String" }
+    }
+  },
+  "importCsvSuccess": "Importerede {count} poster",
+  "@importCsvSuccess": {
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+  "importCsvError": "Kunne ikke læse CSV-filen"
 }

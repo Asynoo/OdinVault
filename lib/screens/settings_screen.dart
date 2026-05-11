@@ -10,6 +10,7 @@ import '../models/totp_entry.dart';
 import '../services/auth_service.dart';
 import '../services/auto_lock_service.dart';
 import '../services/backup_service.dart';
+import '../services/csv_import_service.dart';
 import '../services/database_service.dart';
 import '../services/encryption_service.dart';
 import '../services/locale_service.dart';
@@ -128,6 +129,63 @@ class _SettingsScreenState extends State<SettingsScreen> {
         ),
       );
       widget.onDataChanged?.call();
+    }
+  }
+
+  Future<void> _importCsv() async {
+    final l = AppLocalizations.of(context)!;
+    final result = await FilePicker.platform.pickFiles(type: FileType.any, withData: true);
+    if (result == null || result.files.single.bytes == null) return;
+
+    String content;
+    try {
+      content = utf8.decode(result.files.single.bytes!);
+    } catch (_) {
+      if (mounted) ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(l.importCsvError)));
+      return;
+    }
+
+    final parsed = CsvImportService.parse(content);
+    if (parsed == null) {
+      if (mounted) ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(l.importCsvError)));
+      return;
+    }
+
+    if (!mounted) return;
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: Text(l.importCsv),
+        content: Text(l.importCsvFound(parsed.entries.length, parsed.format)),
+        actions: [
+          TextButton(onPressed: () => Navigator.pop(ctx, false), child: Text(l.cancel)),
+          FilledButton(onPressed: () => Navigator.pop(ctx, true), child: Text(l.importButton)),
+        ],
+      ),
+    );
+    if (confirmed != true || !mounted) return;
+
+    final key = AuthService.sessionKey;
+    if (key == null) return;
+
+    final now = DateTime.now();
+    for (final entry in parsed.entries) {
+      await DatabaseService.insertPassword(PasswordEntry(
+        title: entry.title,
+        username: entry.username,
+        encryptedPassword: EncryptionService.encrypt(entry.password, key),
+        url: entry.url.isEmpty ? null : entry.url,
+        notes: entry.notes.isEmpty ? null : entry.notes,
+        createdAt: now,
+        updatedAt: now,
+      ));
+    }
+
+    widget.onDataChanged?.call();
+    if (mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(l.importCsvSuccess(parsed.entries.length))),
+      );
     }
   }
 
@@ -275,6 +333,13 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 subtitle: Text(l.importVaultSubtitle),
                 trailing: const Icon(Icons.chevron_right),
                 onTap: _importVault,
+              ),
+              ListTile(
+                leading: const Icon(Icons.table_chart_outlined),
+                title: Text(l.importCsv),
+                subtitle: Text(l.importCsvSubtitle),
+                trailing: const Icon(Icons.chevron_right),
+                onTap: _importCsv,
               ),
             ],
           ),

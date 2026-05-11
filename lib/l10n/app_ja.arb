@@ -185,5 +185,21 @@
   "deleteNoteTitle": "ノートを削除",
   "noteContentField": "内容 *",
   "noteContentHint": "ここにメモを入力...",
-  "noteContentRequired": "内容は必須です"
+  "noteContentRequired": "内容は必須です",
+  "importCsv": "CSVからインポート",
+  "importCsvSubtitle": "LastPass・Bitwarden・1Password・ProtonPass",
+  "importCsvFound": "{format}から{count}件見つかりました。インポートしますか？",
+  "@importCsvFound": {
+    "placeholders": {
+      "count": { "type": "int" },
+      "format": { "type": "String" }
+    }
+  },
+  "importCsvSuccess": "{count}件をインポートしました",
+  "@importCsvSuccess": {
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+  "importCsvError": "CSVファイルを解析できませんでした"
 }
