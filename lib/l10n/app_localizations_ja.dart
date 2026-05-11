@@ -480,6 +480,12 @@ class AppLocalizationsJa extends AppLocalizations {
   String get importCsvError => 'CSVファイルを解析できませんでした';
 
   @override
+  String get healthScreenTitle => 'パスワードの健全性';
+
+  @override
+  String get allPasswordsHealthy => 'すべてのパスワードは安全です';
+
+  @override
   String accountLocked(String remaining) {
     return '試行回数が多すぎます。$remaining後に再試行してください。';
   }

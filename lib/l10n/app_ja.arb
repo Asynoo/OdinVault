@@ -202,6 +202,8 @@
     }
   },
   "importCsvError": "CSVファイルを解析できませんでした",
+  "healthScreenTitle": "パスワードの健全性",
+  "allPasswordsHealthy": "すべてのパスワードは安全です",
   "accountLocked": "試行回数が多すぎます。{remaining}後に再試行してください。",
   "@accountLocked": {
     "placeholders": {

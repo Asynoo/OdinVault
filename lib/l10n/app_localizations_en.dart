@@ -485,6 +485,12 @@ class AppLocalizationsEn extends AppLocalizations {
   String get importCsvError => 'Could not parse the CSV file';
 
   @override
+  String get healthScreenTitle => 'Password Health';
+
+  @override
+  String get allPasswordsHealthy => 'All passwords are healthy';
+
+  @override
   String accountLocked(String remaining) {
     return 'Too many failed attempts. Try again in $remaining.';
   }

@@ -487,6 +487,12 @@ class AppLocalizationsDa extends AppLocalizations {
   String get importCsvError => 'Kunne ikke læse CSV-filen';
 
   @override
+  String get healthScreenTitle => 'Adgangskodernes tilstand';
+
+  @override
+  String get allPasswordsHealthy => 'Alle adgangskoder er sunde';
+
+  @override
   String accountLocked(String remaining) {
     return 'For mange fejlede forsøg. Prøv igen om $remaining.';
   }

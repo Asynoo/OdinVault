@@ -202,6 +202,8 @@
     }
   },
   "importCsvError": "Kunne ikke læse CSV-filen",
+  "healthScreenTitle": "Adgangskodernes tilstand",
+  "allPasswordsHealthy": "Alle adgangskoder er sunde",
   "accountLocked": "For mange fejlede forsøg. Prøv igen om {remaining}.",
   "@accountLocked": {
     "placeholders": {

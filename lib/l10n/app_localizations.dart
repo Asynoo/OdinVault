@@ -994,6 +994,18 @@ abstract class AppLocalizations {
   /// **'Could not parse the CSV file'**
   String get importCsvError;
 
+  /// No description provided for @healthScreenTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Password Health'**
+  String get healthScreenTitle;
+
+  /// No description provided for @allPasswordsHealthy.
+  ///
+  /// In en, this message translates to:
+  /// **'All passwords are healthy'**
+  String get allPasswordsHealthy;
+
   /// No description provided for @accountLocked.
   ///
   /// In en, this message translates to:

@@ -10,6 +10,7 @@ import '../widgets/empty_state.dart';
 import '../widgets/password_card.dart';
 import 'add_edit_screen.dart';
 import 'generator_screen.dart';
+import 'health_screen.dart';
 import 'note_screen.dart';
 import 'totp_screen.dart';
 import 'settings_screen.dart';
@@ -138,22 +139,34 @@ class _VaultScreenState extends State<VaultScreen>
     ];
     return Padding(
       padding: const EdgeInsets.fromLTRB(16, 0, 16, 4),
-      child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-        decoration: BoxDecoration(
-          color: Colors.orange.withAlpha(25),
-          border: Border.all(color: Colors.orange.withAlpha(80)),
-          borderRadius: BorderRadius.circular(10),
-        ),
-        child: Row(
-          children: [
-            const Icon(Icons.shield_outlined, color: Colors.orange, size: 18),
-            const SizedBox(width: 8),
-            Text(
-              parts.join(' · '),
-              style: const TextStyle(color: Colors.orange, fontSize: 13),
-            ),
-          ],
+      child: InkWell(
+        borderRadius: BorderRadius.circular(10),
+        onTap: () async {
+          final edited = await Navigator.of(context).push<bool>(
+            MaterialPageRoute(builder: (_) => const HealthScreen()),
+          );
+          if (edited == true) _loadEntries();
+        },
+        child: Container(
+          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+          decoration: BoxDecoration(
+            color: Colors.orange.withAlpha(25),
+            border: Border.all(color: Colors.orange.withAlpha(80)),
+            borderRadius: BorderRadius.circular(10),
+          ),
+          child: Row(
+            children: [
+              const Icon(Icons.shield_outlined, color: Colors.orange, size: 18),
+              const SizedBox(width: 8),
+              Expanded(
+                child: Text(
+                  parts.join(' · '),
+                  style: const TextStyle(color: Colors.orange, fontSize: 13),
+                ),
+              ),
+              const Icon(Icons.chevron_right, color: Colors.orange, size: 16),
+            ],
+          ),
         ),
       ),
     );
