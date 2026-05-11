@@ -204,6 +204,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
     final database = await DatabaseService.db;
     await database.delete(DatabaseService.tablePasswords);
     await database.delete(DatabaseService.tableTotp);
+    await database.delete(DatabaseService.tableNotes);
     await AuthService.deleteAll();
 
     if (!mounted) return;
@@ -467,7 +468,11 @@ class _ExportDialogState extends State<_ExportDialog> {
 
     if (!mounted) return;
     Navigator.pop(context);
-    await Share.shareXFiles([XFile(filePath)]);
+    try {
+      await Share.shareXFiles([XFile(filePath)]);
+    } finally {
+      await File(filePath).delete().catchError((_) => File(filePath));
+    }
   }
 
   @override
@@ -555,33 +560,42 @@ class _ImportDialogState extends State<_ImportDialog> {
     int totpCount = 0;
     final now = DateTime.now();
 
-    final passwords = parsed['passwords'] as List<dynamic>? ?? [];
+    String s(Map<String, dynamic> m, String k) => m[k] is String ? m[k] as String : '';
+    int i(Map<String, dynamic> m, String k, int d) => m[k] is int ? m[k] as int : d;
+
+    final passwords = parsed['passwords'] is List ? parsed['passwords'] as List : [];
     for (final p in passwords) {
-      final map = p as Map<String, dynamic>;
+      if (p is! Map<String, dynamic>) continue;
+      final title = s(p, 'title');
+      final username = s(p, 'username');
+      final password = s(p, 'password');
+      if (title.isEmpty || password.isEmpty) continue;
+      final url = s(p, 'url');
+      final notes = s(p, 'notes');
       await DatabaseService.insertPassword(PasswordEntry(
-        title: map['title'] as String,
-        username: map['username'] as String,
-        encryptedPassword:
-            EncryptionService.encrypt(map['password'] as String, key),
-        url: (map['url'] as String).isEmpty ? null : map['url'] as String,
-        notes:
-            (map['notes'] as String).isEmpty ? null : map['notes'] as String,
+        title: title,
+        username: username,
+        encryptedPassword: EncryptionService.encrypt(password, key),
+        url: url.isEmpty ? null : url,
+        notes: notes.isEmpty ? null : notes,
         createdAt: now,
         updatedAt: now,
       ));
       passwordCount++;
     }
 
-    final totpList = parsed['totp'] as List<dynamic>? ?? [];
+    final totpList = parsed['totp'] is List ? parsed['totp'] as List : [];
     for (final t in totpList) {
-      final map = t as Map<String, dynamic>;
+      if (t is! Map<String, dynamic>) continue;
+      final name = s(t, 'name');
+      final secret = s(t, 'secret');
+      if (name.isEmpty || secret.isEmpty) continue;
       await DatabaseService.insertTotp(TotpEntry(
-        name: map['name'] as String,
-        issuer: map['issuer'] as String,
-        encryptedSecret:
-            EncryptionService.encrypt(map['secret'] as String, key),
-        digits: map['digits'] as int,
-        period: map['period'] as int,
+        name: name,
+        issuer: s(t, 'issuer'),
+        encryptedSecret: EncryptionService.encrypt(secret, key),
+        digits: i(t, 'digits', 6),
+        period: i(t, 'period', 30),
         createdAt: now,
       ));
       totpCount++;

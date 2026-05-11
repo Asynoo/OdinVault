@@ -144,4 +144,9 @@ class DatabaseService {
     final database = await db;
     await database.delete(tableNotes, where: 'id = ?', whereArgs: [id]);
   }
+
+  static Future<void> close() async {
+    await _db?.close();
+    _db = null;
+  }
 }
