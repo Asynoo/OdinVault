@@ -181,6 +181,9 @@ class AppLocalizationsJa extends AppLocalizations {
   String get addTwoFaTitle => '2FAアカウントを追加';
 
   @override
+  String get editTwoFaTitle => '2FAアカウントを編集';
+
+  @override
   String get accountNameField => 'アカウント名 *';
 
   @override

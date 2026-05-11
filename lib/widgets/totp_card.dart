@@ -8,6 +8,7 @@ class TotpCard extends StatelessWidget {
   final TotpEntry entry;
   final String secret;
   final int secondsLeft;
+  final VoidCallback onEdit;
   final VoidCallback onDelete;
 
   const TotpCard({
@@ -15,6 +16,7 @@ class TotpCard extends StatelessWidget {
     required this.entry,
     required this.secret,
     required this.secondsLeft,
+    required this.onEdit,
     required this.onDelete,
   });
 
@@ -92,20 +94,23 @@ class TotpCard extends StatelessWidget {
               ],
             ),
             const SizedBox(width: 4),
-            Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                IconButton(
-                  icon: const Icon(Icons.copy, size: 20),
-                  tooltip: l.copyCodeTooltip,
-                  onPressed: () =>
-                      copyWithFeedback(context, code, l.codeCopied),
-                ),
-                IconButton(
-                  icon: const Icon(Icons.delete_outline,
-                      size: 20, color: Colors.red),
-                  tooltip: l.removeTooltip,
-                  onPressed: onDelete,
+            IconButton(
+              icon: const Icon(Icons.copy, size: 20),
+              tooltip: l.copyCodeTooltip,
+              onPressed: () => copyWithFeedback(context, code, l.codeCopied),
+            ),
+            PopupMenuButton<String>(
+              icon: const Icon(Icons.more_vert, size: 20),
+              onSelected: (value) {
+                if (value == 'edit') onEdit();
+                if (value == 'delete') onDelete();
+              },
+              itemBuilder: (_) => [
+                PopupMenuItem(value: 'edit', child: Text(l.edit)),
+                PopupMenuItem(
+                  value: 'delete',
+                  child: Text(l.remove,
+                      style: const TextStyle(color: Colors.red)),
                 ),
               ],
             ),

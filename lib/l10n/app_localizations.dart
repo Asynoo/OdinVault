@@ -424,6 +424,12 @@ abstract class AppLocalizations {
   /// **'Add 2FA Account'**
   String get addTwoFaTitle;
 
+  /// No description provided for @editTwoFaTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit 2FA Account'**
+  String get editTwoFaTitle;
+
   /// No description provided for @accountNameField.
   ///
   /// In en, this message translates to:

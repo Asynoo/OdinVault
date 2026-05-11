@@ -184,6 +184,9 @@ class AppLocalizationsDa extends AppLocalizations {
   String get addTwoFaTitle => 'Tilføj 2FA-konto';
 
   @override
+  String get editTwoFaTitle => 'Rediger 2FA-konto';
+
+  @override
   String get accountNameField => 'Kontonavn *';
 
   @override

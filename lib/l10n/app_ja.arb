@@ -79,6 +79,7 @@
   "remove": "削除",
   "addTwoFaTooltip": "2FAを追加",
   "addTwoFaTitle": "2FAアカウントを追加",
+  "editTwoFaTitle": "2FAアカウントを編集",
   "accountNameField": "アカウント名 *",
   "accountNameHint": "例：john@gmail.com",
   "issuerField": "発行者",

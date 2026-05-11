@@ -60,6 +60,29 @@ class TotpScreenState extends State<TotpScreen> {
     });
   }
 
+  Future<void> _editEntry(TotpEntry entry) async {
+    final secret = AuthService.decrypt(entry.encryptedSecret);
+    final result = await showDialog<Map<String, String>>(
+      context: context,
+      builder: (ctx) => _AddTotpDialog(initialEntry: entry, initialSecret: secret),
+    );
+    if (result == null) return;
+
+    final key = AuthService.sessionKey;
+    if (key == null) return;
+
+    await DatabaseService.updateTotp(TotpEntry(
+      id: entry.id,
+      name: result['name']!,
+      issuer: result['issuer'] ?? '',
+      encryptedSecret: EncryptionService.encrypt(result['secret']!, key),
+      digits: entry.digits,
+      period: entry.period,
+      createdAt: entry.createdAt,
+    ));
+    _loadEntries();
+  }
+
   Future<void> _deleteEntry(TotpEntry entry) async {
     final l = AppLocalizations.of(context)!;
     final confirmed = await showConfirmDialog(
@@ -147,6 +170,7 @@ class TotpScreenState extends State<TotpScreen> {
                       entry: entry,
                       secret: secret,
                       secondsLeft: _secondsLeft,
+                      onEdit: () => _editEntry(entry),
                       onDelete: () => _deleteEntry(entry),
                     );
                   },
@@ -200,7 +224,10 @@ class _TotpFabState extends State<TotpFab> {
 }
 
 class _AddTotpDialog extends StatefulWidget {
-  const _AddTotpDialog();
+  final TotpEntry? initialEntry;
+  final String? initialSecret;
+
+  const _AddTotpDialog({this.initialEntry, this.initialSecret});
 
   @override
   State<_AddTotpDialog> createState() => _AddTotpDialogState();
@@ -208,9 +235,9 @@ class _AddTotpDialog extends StatefulWidget {
 
 class _AddTotpDialogState extends State<_AddTotpDialog> {
   final _formKey = GlobalKey<FormState>();
-  final _nameCtrl = TextEditingController();
-  final _issuerCtrl = TextEditingController();
-  final _secretCtrl = TextEditingController();
+  late final _nameCtrl = TextEditingController(text: widget.initialEntry?.name ?? '');
+  late final _issuerCtrl = TextEditingController(text: widget.initialEntry?.issuer ?? '');
+  late final _secretCtrl = TextEditingController(text: widget.initialSecret ?? '');
 
   @override
   void dispose() {
@@ -237,7 +264,7 @@ class _AddTotpDialogState extends State<_AddTotpDialog> {
   Widget build(BuildContext context) {
     final l = AppLocalizations.of(context)!;
     return AlertDialog(
-      title: Text(l.addTwoFaTitle),
+      title: Text(widget.initialEntry != null ? l.editTwoFaTitle : l.addTwoFaTitle),
       content: Form(
         key: _formKey,
         child: SingleChildScrollView(

@@ -79,6 +79,7 @@
   "remove": "Remove",
   "addTwoFaTooltip": "Add 2FA",
   "addTwoFaTitle": "Add 2FA Account",
+  "editTwoFaTitle": "Edit 2FA Account",
   "accountNameField": "Account Name *",
   "accountNameHint": "e.g. john@gmail.com",
   "issuerField": "Issuer",

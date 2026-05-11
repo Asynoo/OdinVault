@@ -79,6 +79,7 @@
   "remove": "Fjern",
   "addTwoFaTooltip": "Tilføj 2FA",
   "addTwoFaTitle": "Tilføj 2FA-konto",
+  "editTwoFaTitle": "Rediger 2FA-konto",
   "accountNameField": "Kontonavn *",
   "accountNameHint": "f.eks. john@gmail.com",
   "issuerField": "Udsteder",
