@@ -429,4 +429,34 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get reusedPasswordWarning => 'パスワードが使い回されています';
+
+  @override
+  String get notesTab => 'ノート';
+
+  @override
+  String get noNotesYet => 'ノートがありません。\n＋をタップして追加してください。';
+
+  @override
+  String get searchNotes => 'ノートを検索...';
+
+  @override
+  String get addNoteTooltip => 'ノートを追加';
+
+  @override
+  String get addNoteTitle => '新しいノート';
+
+  @override
+  String get editNoteTitle => 'ノートを編集';
+
+  @override
+  String get deleteNoteTitle => 'ノートを削除';
+
+  @override
+  String get noteContentField => '内容 *';
+
+  @override
+  String get noteContentHint => 'ここにメモを入力...';
+
+  @override
+  String get noteContentRequired => '内容は必須です';
 }

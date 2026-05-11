@@ -903,6 +903,66 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Password reused'**
   String get reusedPasswordWarning;
+
+  /// No description provided for @notesTab.
+  ///
+  /// In en, this message translates to:
+  /// **'Notes'**
+  String get notesTab;
+
+  /// No description provided for @noNotesYet.
+  ///
+  /// In en, this message translates to:
+  /// **'No notes yet.\nTap + to add one.'**
+  String get noNotesYet;
+
+  /// No description provided for @searchNotes.
+  ///
+  /// In en, this message translates to:
+  /// **'Search notes...'**
+  String get searchNotes;
+
+  /// No description provided for @addNoteTooltip.
+  ///
+  /// In en, this message translates to:
+  /// **'Add note'**
+  String get addNoteTooltip;
+
+  /// No description provided for @addNoteTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'New Note'**
+  String get addNoteTitle;
+
+  /// No description provided for @editNoteTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit Note'**
+  String get editNoteTitle;
+
+  /// No description provided for @deleteNoteTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete Note'**
+  String get deleteNoteTitle;
+
+  /// No description provided for @noteContentField.
+  ///
+  /// In en, this message translates to:
+  /// **'Content *'**
+  String get noteContentField;
+
+  /// No description provided for @noteContentHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Write your note here...'**
+  String get noteContentHint;
+
+  /// No description provided for @noteContentRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Content is required'**
+  String get noteContentRequired;
 }
 
 class _AppLocalizationsDelegate

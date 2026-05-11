@@ -175,5 +175,15 @@
     "placeholders": { "n": { "type": "int" } }
   },
   "weakPasswordWarning": "脆弱なパスワード",
-  "reusedPasswordWarning": "パスワードが使い回されています"
+  "reusedPasswordWarning": "パスワードが使い回されています",
+  "notesTab": "ノート",
+  "noNotesYet": "ノートがありません。\n＋をタップして追加してください。",
+  "searchNotes": "ノートを検索...",
+  "addNoteTooltip": "ノートを追加",
+  "addNoteTitle": "新しいノート",
+  "editNoteTitle": "ノートを編集",
+  "deleteNoteTitle": "ノートを削除",
+  "noteContentField": "内容 *",
+  "noteContentHint": "ここにメモを入力...",
+  "noteContentRequired": "内容は必須です"
 }

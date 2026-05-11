@@ -175,5 +175,15 @@
     "placeholders": { "n": { "type": "int" } }
   },
   "weakPasswordWarning": "Svag adgangskode",
-  "reusedPasswordWarning": "Adgangskode genbrugt"
+  "reusedPasswordWarning": "Adgangskode genbrugt",
+  "notesTab": "Noter",
+  "noNotesYet": "Ingen noter endnu.\nTryk på + for at tilføje.",
+  "searchNotes": "Søg noter...",
+  "addNoteTooltip": "Tilføj note",
+  "addNoteTitle": "Ny note",
+  "editNoteTitle": "Rediger note",
+  "deleteNoteTitle": "Slet note",
+  "noteContentField": "Indhold *",
+  "noteContentHint": "Skriv din note her...",
+  "noteContentRequired": "Indhold er påkrævet"
 }

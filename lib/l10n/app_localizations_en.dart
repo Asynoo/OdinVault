@@ -434,4 +434,34 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get reusedPasswordWarning => 'Password reused';
+
+  @override
+  String get notesTab => 'Notes';
+
+  @override
+  String get noNotesYet => 'No notes yet.\nTap + to add one.';
+
+  @override
+  String get searchNotes => 'Search notes...';
+
+  @override
+  String get addNoteTooltip => 'Add note';
+
+  @override
+  String get addNoteTitle => 'New Note';
+
+  @override
+  String get editNoteTitle => 'Edit Note';
+
+  @override
+  String get deleteNoteTitle => 'Delete Note';
+
+  @override
+  String get noteContentField => 'Content *';
+
+  @override
+  String get noteContentHint => 'Write your note here...';
+
+  @override
+  String get noteContentRequired => 'Content is required';
 }

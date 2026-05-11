@@ -175,5 +175,15 @@
     "placeholders": { "n": { "type": "int" } }
   },
   "weakPasswordWarning": "Weak password",
-  "reusedPasswordWarning": "Password reused"
+  "reusedPasswordWarning": "Password reused",
+  "notesTab": "Notes",
+  "noNotesYet": "No notes yet.\nTap + to add one.",
+  "searchNotes": "Search notes...",
+  "addNoteTooltip": "Add note",
+  "addNoteTitle": "New Note",
+  "editNoteTitle": "Edit Note",
+  "deleteNoteTitle": "Delete Note",
+  "noteContentField": "Content *",
+  "noteContentHint": "Write your note here...",
+  "noteContentRequired": "Content is required"
 }

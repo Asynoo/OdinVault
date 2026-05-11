@@ -436,4 +436,34 @@ class AppLocalizationsDa extends AppLocalizations {
 
   @override
   String get reusedPasswordWarning => 'Adgangskode genbrugt';
+
+  @override
+  String get notesTab => 'Noter';
+
+  @override
+  String get noNotesYet => 'Ingen noter endnu.\nTryk på + for at tilføje.';
+
+  @override
+  String get searchNotes => 'Søg noter...';
+
+  @override
+  String get addNoteTooltip => 'Tilføj note';
+
+  @override
+  String get addNoteTitle => 'Ny note';
+
+  @override
+  String get editNoteTitle => 'Rediger note';
+
+  @override
+  String get deleteNoteTitle => 'Slet note';
+
+  @override
+  String get noteContentField => 'Indhold *';
+
+  @override
+  String get noteContentHint => 'Skriv din note her...';
+
+  @override
+  String get noteContentRequired => 'Indhold er påkrævet';
 }

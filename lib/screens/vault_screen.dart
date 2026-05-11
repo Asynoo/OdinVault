@@ -10,6 +10,7 @@ import '../widgets/empty_state.dart';
 import '../widgets/password_card.dart';
 import 'add_edit_screen.dart';
 import 'generator_screen.dart';
+import 'note_screen.dart';
 import 'totp_screen.dart';
 import 'settings_screen.dart';
 import 'login_screen.dart';
@@ -24,6 +25,7 @@ class VaultScreen extends StatefulWidget {
 class _VaultScreenState extends State<VaultScreen>
     with WidgetsBindingObserver {
   final _totpKey = GlobalKey<TotpScreenState>();
+  final _noteKey = GlobalKey<NoteScreenState>();
   int _navIndex = 0;
   List<PasswordEntry> _entries = [];
   Map<int, HealthIssue> _healthMap = {};
@@ -207,12 +209,14 @@ class _VaultScreenState extends State<VaultScreen>
     final tabs = [
       _buildVaultTab(l),
       TotpScreen(key: _totpKey),
+      NoteScreen(key: _noteKey),
       const GeneratorScreen(),
       SettingsScreen(
         onLogout: _logout,
         onDataChanged: () {
           _loadEntries();
           _totpKey.currentState?.refresh();
+          _noteKey.currentState?.refresh();
         },
       ),
     ];
@@ -229,15 +233,16 @@ class _VaultScreenState extends State<VaultScreen>
         ],
       ),
       body: tabs[_navIndex],
-      floatingActionButton: _navIndex == 0
-          ? FloatingActionButton(
-              onPressed: _addEntry,
-              tooltip: l.addPasswordTooltip,
-              child: const Icon(Icons.add),
-            )
-          : _navIndex == 1
-              ? TotpFab(onAdded: () => _totpKey.currentState?.refresh())
-              : null,
+      floatingActionButton: switch (_navIndex) {
+        0 => FloatingActionButton(
+            onPressed: _addEntry,
+            tooltip: l.addPasswordTooltip,
+            child: const Icon(Icons.add),
+          ),
+        1 => TotpFab(onAdded: () => _totpKey.currentState?.refresh()),
+        2 => NoteFab(onAdded: () => _noteKey.currentState?.refresh()),
+        _ => null,
+      },
       bottomNavigationBar: NavigationBar(
         selectedIndex: _navIndex,
         onDestinationSelected: (i) => setState(() => _navIndex = i),
@@ -246,6 +251,8 @@ class _VaultScreenState extends State<VaultScreen>
               icon: const Icon(Icons.password), label: l.passwordsTab),
           NavigationDestination(
               icon: const Icon(Icons.security), label: l.twoFaTab),
+          NavigationDestination(
+              icon: const Icon(Icons.note_outlined), label: l.notesTab),
           NavigationDestination(
               icon: const Icon(Icons.casino_outlined), label: l.generatorTab),
           NavigationDestination(
